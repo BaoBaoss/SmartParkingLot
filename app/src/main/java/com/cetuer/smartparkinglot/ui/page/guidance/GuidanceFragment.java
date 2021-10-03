@@ -10,6 +10,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.BR;
@@ -19,12 +21,16 @@ import com.cetuer.smartparkinglot.bluetooth.BleManager;
 import com.cetuer.smartparkinglot.databinding.FragmentGuidanceBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
+import com.cetuer.smartparkinglot.ui.adapter.IBeaconAdapter;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
+import com.cetuer.smartparkinglot.utils.CalculateUtil;
 import com.cetuer.smartparkinglot.utils.GpsUtils;
 import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.permissionx.guolindev.PermissionX;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
@@ -33,6 +39,7 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     private SharedViewModel mEvent;
     private boolean mOpenBluetooth;
     private boolean mOpenGps;
+    private IBeaconAdapter mIBeaconAdapter;
 
     @Override
     protected void initViewModel() {
@@ -49,12 +56,14 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         requestPermission();
+        mBinding.list.setLayoutManager(new LinearLayoutManager(getContext()));
         BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> {
-            KLog.i("----------------------------------------");
-            for (BleDevice bleDevice : bleDevices) {
-                KLog.i(bleDevice);
+            if(mIBeaconAdapter == null) {
+                mIBeaconAdapter = new IBeaconAdapter(getContext(), bleDevices);
+                mBinding.list.setAdapter(mIBeaconAdapter);
+                return;
             }
-            KLog.i("----------------------------------------");
+            mIBeaconAdapter.notifyDataSetChanged();
         });
         mEvent.isOpenBluetooth().observe(mActivity, openBluetooth -> {
             mOpenBluetooth = openBluetooth;
@@ -64,6 +73,10 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
             mOpenGps = openGps;
             controlBluetooth();
         });
+        getObserve();
+    }
+
+    private void getObserve() {
         mState.getText().observe(getViewLifecycleOwner(), s -> {
 
         });

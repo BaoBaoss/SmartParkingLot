@@ -5,21 +5,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
+import com.cetuer.smartparkinglot.common.KalmanFilter;
+import com.cetuer.smartparkinglot.utils.CalculateUtil;
+import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.NumConvertUtil;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Created by Cetuer on 2021/9/4 21:39.
  * BLE设备实体类
  */
-public class BleDevice implements Parcelable {
+public class BleDevice extends BaseObservable implements Parcelable {
     /**
      * 最大间隔，超过此时长未更新则删除此设备，默认三秒
      */
     private final long MAX_INTERVAL = 3 * 1000;
+    /**
+     * 卡尔曼滤波
+     */
+    private final KalmanFilter kalmanFilter = new KalmanFilter(10, 100);
 
     private BluetoothDevice device;
     private Integer major;
@@ -29,6 +37,7 @@ public class BleDevice implements Parcelable {
     private Integer rssi;
     private byte[] scanData;
     private String uuid;
+    private Integer distance;
     private long updateTime;
 
     public BleDevice(BluetoothDevice bluetoothDevice, byte[] scanData) {
@@ -54,6 +63,7 @@ public class BleDevice implements Parcelable {
                 NumConvertUtil.byte2hex(scanData, 15, 2) + "-" +
                 NumConvertUtil.byte2hex(scanData, 17, 2) + "-" +
                 NumConvertUtil.byte2hex(scanData, 19, 6);
+        this.rssi = (int) kalmanFilter.doFilter(rssi);
         this.updateTime = System.currentTimeMillis();
     }
 
@@ -64,9 +74,10 @@ public class BleDevice implements Parcelable {
     }
 
     public boolean isAvailable() {
-        return  (System.currentTimeMillis() - this.updateTime) > MAX_INTERVAL;
+        return (System.currentTimeMillis() - this.updateTime) > MAX_INTERVAL;
     }
 
+    @Bindable
     public BluetoothDevice getDevice() {
         return device;
     }
@@ -75,6 +86,7 @@ public class BleDevice implements Parcelable {
         this.device = device;
     }
 
+    @Bindable
     public Integer getMajor() {
         return major;
     }
@@ -83,6 +95,7 @@ public class BleDevice implements Parcelable {
         this.major = major;
     }
 
+    @Bindable
     public Integer getMinor() {
         return minor;
     }
@@ -91,6 +104,7 @@ public class BleDevice implements Parcelable {
         this.minor = minor;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
@@ -99,6 +113,7 @@ public class BleDevice implements Parcelable {
         this.name = name;
     }
 
+    @Bindable
     public Integer getPower() {
         return power;
     }
@@ -107,6 +122,7 @@ public class BleDevice implements Parcelable {
         this.power = power;
     }
 
+    @Bindable
     public Integer getRssi() {
         return rssi;
     }
@@ -123,6 +139,7 @@ public class BleDevice implements Parcelable {
         this.scanData = scanData;
     }
 
+    @Bindable
     public String getUuid() {
         return uuid;
     }
@@ -131,6 +148,14 @@ public class BleDevice implements Parcelable {
         this.uuid = uuid;
     }
 
+    @Bindable
+    public Integer getDistance() {
+        return (int) CalculateUtil.calculationDistanceByRSSI(this.rssi);
+    }
+
+    public void setDistance(Integer distance) {
+        this.distance = distance;
+    }
 
     @NonNull
     @Override
@@ -144,6 +169,7 @@ public class BleDevice implements Parcelable {
                 ", rssi=" + rssi +
                 ", scanData=" + Arrays.toString(scanData) +
                 ", uuid='" + uuid + '\'' +
+                ", distance='" + distance + '\'' +
                 '}';
     }
 
@@ -169,6 +195,11 @@ public class BleDevice implements Parcelable {
             rssi = null;
         } else {
             rssi = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            distance = null;
+        } else {
+            distance = in.readInt();
         }
         scanData = in.createByteArray();
         uuid = in.readString();
@@ -220,22 +251,13 @@ public class BleDevice implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(rssi);
         }
+        if (distance == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(distance);
+        }
         dest.writeByteArray(scanData);
         dest.writeString(uuid);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BleDevice bleDevice = (BleDevice) o;
-        return Objects.equals(device, bleDevice.device) && Objects.equals(major, bleDevice.major) && Objects.equals(minor, bleDevice.minor) && Objects.equals(name, bleDevice.name) && Objects.equals(power, bleDevice.power) && Objects.equals(rssi, bleDevice.rssi) && Arrays.equals(scanData, bleDevice.scanData) && Objects.equals(uuid, bleDevice.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(device, major, minor, name, power, rssi, uuid);
-        result = 31 * result + Arrays.hashCode(scanData);
-        return result;
     }
 }

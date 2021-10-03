@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="bleDevice"
+            type="com.cetuer.smartparkinglot.bluetooth.BleDevice" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`mac: ` +  bleDevice.device.address}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`uuid: ` + bleDevice.uuid}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`major: ` + bleDevice.major + `, minor: ` + bleDevice.minor}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`power: ` + bleDevice.power + `, rssi: ` + bleDevice.rssi}"
+            android:textColor="#7B68EE" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`distance: ` + bleDevice.distance}"
+            android:textColor="#DC143C" />
+    </LinearLayout>
+</layout>

@@ -43,7 +43,7 @@ public class BleManager {
     /**
      * 外部获取的蓝牙设备列表
      */
-    private final MutableLiveData<List<BleDevice>> bleDevicesData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<BleDevice>> bleDevicesData = new MutableLiveData<>();
 
     /**
      * 默认过滤蓝牙地址
@@ -74,6 +74,11 @@ public class BleManager {
      * 内部设备列表
      */
     private Map<String, BleDevice> devices;
+
+    /**
+     * 返回的设备列表，保证地址不变
+     */
+    private final List<BleDevice> bleDeviceList = new ArrayList<>();
 
     /**
      * 过滤构造器
@@ -120,7 +125,9 @@ public class BleManager {
                 bleDevice = new BleDevice(result.getDevice(), rssi, result.getScanRecord().getBytes());
             }
             devices.put(address, bleDevice);
-            bleDevicesData.setValue(new ArrayList<>(devices.values()));
+            bleDeviceList.clear();
+            bleDeviceList.addAll(devices.values());
+            bleDevicesData.setValue(bleDeviceList);
         }
 
         @Override
