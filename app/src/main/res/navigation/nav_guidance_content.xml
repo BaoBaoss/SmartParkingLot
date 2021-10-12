@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_guidance_content"
+    app:startDestination="@id/guidance_fragment">
+
+    <fragment
+        android:id="@+id/guidance_fragment"
+        android:name="com.cetuer.smartparkinglot.ui.page.guidance.GuidanceFragment"
+        android:label="停车引导"
+        tools:layout="@layout/fragment_guidance">
+        <action
+            android:id="@+id/action_guidance_to_configuration"
+            app:destination="@id/configuration_fragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/configuration_fragment"
+        android:name="com.cetuer.smartparkinglot.ui.page.guidance.ConfigurationFragment"
+        android:label="配置参数"
+        tools:layout="@layout/fragment_configuration">
+    </fragment>
+</navigation>

@@ -56,10 +56,10 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         requestPermission();
-        mBinding.list.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBinding.list.setLayoutManager(new LinearLayoutManager(this.mActivity));
         BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> {
             if(mIBeaconAdapter == null) {
-                mIBeaconAdapter = new IBeaconAdapter(getContext(), bleDevices);
+                mIBeaconAdapter = new IBeaconAdapter(this.mActivity, bleDevices);
                 mBinding.list.setAdapter(mIBeaconAdapter);
                 return;
             }
@@ -73,15 +73,10 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
             mOpenGps = openGps;
             controlBluetooth();
         });
-        getObserve();
+        /*mState.getText().observe(getViewLifecycleOwner(), s -> {
+
+        });*/
     }
-
-    private void getObserve() {
-        mState.getText().observe(getViewLifecycleOwner(), s -> {
-
-        });
-    }
-
     /**
      * 请求权限
      */

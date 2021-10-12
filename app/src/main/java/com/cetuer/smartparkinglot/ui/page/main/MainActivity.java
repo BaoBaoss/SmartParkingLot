@@ -23,6 +23,7 @@ import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.adapter.FragmentViewPagerAdapter;
 import com.cetuer.smartparkinglot.ui.page.find_car.FindCarFragment;
+import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceContainerFragment;
 import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceFragment;
 import com.cetuer.smartparkinglot.ui.page.carport_query.CarportQueryFragment;
 import com.cetuer.smartparkinglot.ui.page.BaseActivity;
@@ -64,7 +65,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         BleManager.getInstance().init(this);
 
         FragmentViewPagerAdapter viewPagerAdapter = new FragmentViewPagerAdapter(this);
-        viewPagerAdapter.addFragment(new GuidanceFragment());
+        viewPagerAdapter.addFragment(new GuidanceContainerFragment());
         viewPagerAdapter.addFragment(new FindCarFragment());
         viewPagerAdapter.addFragment(new CarportQueryFragment());
         viewPagerAdapter.addFragment(new MineFragment());

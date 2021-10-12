@@ -57,8 +57,8 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
 
 
 
-        BarUtils.setStatusBarColor(this, Color.TRANSPARENT);
-        BarUtils.setStatusBarLightMode(this, true);
+        /*BarUtils.setStatusBarColor(this, Color.TRANSPARENT);
+        BarUtils.setStatusBarLightMode(this, true);*/
 
         getLifecycle().addObserver(NetworkStateManager.getInstance());
 
