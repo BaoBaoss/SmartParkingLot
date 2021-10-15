@@ -18,6 +18,7 @@ import android.os.Handler;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceFragment;
 import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
@@ -76,11 +77,6 @@ public class BleManager {
     private Map<String, BleDevice> devices;
 
     /**
-     * 返回的设备列表，保证地址不变
-     */
-    private final List<BleDevice> bleDeviceList = new ArrayList<>();
-
-    /**
      * 过滤构造器
      */
     private ScanFilter.Builder filterBuilder;
@@ -118,16 +114,9 @@ public class BleManager {
             //refreshDevice();
             int rssi = result.getRssi();
             String address = result.getDevice().getAddress();
-            BleDevice bleDevice = devices.get(address);
-            if (bleDevice != null) {
-                bleDevice.updateParams(rssi, result.getScanRecord().getBytes());
-            } else {
-                bleDevice = new BleDevice(result.getDevice(), rssi, result.getScanRecord().getBytes());
-            }
+            BleDevice bleDevice = new BleDevice(result.getDevice(), rssi, result.getScanRecord().getBytes());
             devices.put(address, bleDevice);
-            bleDeviceList.clear();
-            bleDeviceList.addAll(devices.values());
-            bleDevicesData.setValue(bleDeviceList);
+            bleDevicesData.setValue(new ArrayList<>(devices.values()));
         }
 
         @Override

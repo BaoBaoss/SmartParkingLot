@@ -9,7 +9,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,12 +29,14 @@ import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.CalculateUtil;
 import com.cetuer.smartparkinglot.utils.GpsUtils;
 import com.cetuer.smartparkinglot.utils.KLog;
+import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.permissionx.guolindev.PermissionX;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
 
@@ -49,22 +54,28 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
 
     @Override
     protected DataBindingConfig getDataBindingConfig() {
-        return new DataBindingConfig(R.layout.fragment_guidance, BR.vm, mState);
+        mIBeaconAdapter = new IBeaconAdapter(this.mActivity);
+        mIBeaconAdapter.setOnItemClickListener((viewId, item, position) -> {
+            MaterialDialogUtils.showBasicDialog(mActivity, "提示", "是否设置参数？")
+                    .onPositive((dialog, which) -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("devicePosition", position);
+                        NavHostFragment.findNavController(this).navigate(R.id.action_guidance_to_configuration, bundle);
+                    })
+                    .show();
+        });
+        return new DataBindingConfig(R.layout.fragment_guidance, BR.vm, mState)
+                .addBindingParam(BR.adapter, mIBeaconAdapter);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         requestPermission();
-        mBinding.list.setLayoutManager(new LinearLayoutManager(this.mActivity));
         BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> {
-            if(mIBeaconAdapter == null) {
-                mIBeaconAdapter = new IBeaconAdapter(this.mActivity, bleDevices);
-                mBinding.list.setAdapter(mIBeaconAdapter);
-                return;
-            }
-            mIBeaconAdapter.notifyDataSetChanged();
+            mState.list.setValue(bleDevices);
         });
+
         mEvent.isOpenBluetooth().observe(mActivity, openBluetooth -> {
             mOpenBluetooth = openBluetooth;
             controlBluetooth();
@@ -77,6 +88,7 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
 
         });*/
     }
+
     /**
      * 请求权限
      */
@@ -95,10 +107,10 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
                         boolean isOpenGps = GpsUtils.checkLocation(mActivity);
                         mEvent.isOpenBluetooth().setValue(isOpenBlueTooth);
                         mEvent.isOpenGPS().setValue(isOpenGps);
-                        if(!isOpenBlueTooth) {
+                        if (!isOpenBlueTooth) {
                             BleManager.getInstance().showOpenToothDialog();
                         }
-                        if(!isOpenGps) {
+                        if (!isOpenGps) {
                             ToastUtils.showShortToast(mActivity, "需要打开位置权限才可以搜索到蓝牙设备");
                         }
                     }

@@ -1,19 +1,13 @@
 package com.cetuer.smartparkinglot.ui.page.guidance;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cetuer.smartparkinglot.bluetooth.BleDevice;
+
+import java.util.List;
+
 public class GuidanceViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-
-    public GuidanceViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
+    public final MutableLiveData<List<BleDevice>> list = new MutableLiveData<>();
 }

@@ -1,7 +1,8 @@
 package com.cetuer.smartparkinglot.ui.page.guidance;
 
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 public class ConfigurationViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
+    public final ObservableField<String> mText = new ObservableField<>();
 }

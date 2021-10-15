@@ -5,12 +5,14 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.cetuer.smartparkinglot.BR;
 import com.cetuer.smartparkinglot.R;
 import com.cetuer.smartparkinglot.databinding.FragmentConfigurationBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
+import com.cetuer.smartparkinglot.utils.KLog;
 
 /**
  * 配置参数
@@ -32,5 +34,8 @@ public class ConfigurationFragment extends BaseFragment<FragmentConfigurationBin
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mState.mText.set(getArguments().getInt("devicePosition", -1) + "");
     }
+
+
 }
