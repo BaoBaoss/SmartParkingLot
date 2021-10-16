@@ -71,6 +71,7 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mBinding.list.setItemAnimator(null);
         requestPermission();
         BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> {
             mState.list.setValue(bleDevices);

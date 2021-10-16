@@ -18,6 +18,7 @@ import android.os.Handler;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.cetuer.smartparkinglot.bluetooth.kalman.KalmanSingleton;
 import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceFragment;
 import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
@@ -114,7 +115,7 @@ public class BleManager {
             //refreshDevice();
             int rssi = result.getRssi();
             String address = result.getDevice().getAddress();
-            BleDevice bleDevice = new BleDevice(result.getDevice(), rssi, result.getScanRecord().getBytes());
+            BleDevice bleDevice = new BleDevice(result.getDevice(), (int) KalmanSingleton.getKalman(address).doFilter(rssi), result.getScanRecord().getBytes());
             devices.put(address, bleDevice);
             bleDevicesData.setValue(new ArrayList<>(devices.values()));
         }

@@ -8,9 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.cetuer.smartparkinglot.common.KalmanFilter;
+import com.cetuer.smartparkinglot.bluetooth.kalman.KalmanFilter;
 import com.cetuer.smartparkinglot.utils.CalculateUtil;
-import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.NumConvertUtil;
 
 import java.util.Arrays;
@@ -24,10 +23,6 @@ public class BleDevice extends BaseObservable implements Parcelable {
      * 最大间隔，超过此时长未更新则删除此设备，默认三秒
      */
     private final long MAX_INTERVAL = 3 * 1000;
-    /**
-     * 卡尔曼滤波
-     */
-    private final KalmanFilter kalmanFilter = new KalmanFilter(10, 100);
 
     private BluetoothDevice device;
     private Integer major;
@@ -63,7 +58,6 @@ public class BleDevice extends BaseObservable implements Parcelable {
                 NumConvertUtil.byte2hex(scanData, 15, 2) + "-" +
                 NumConvertUtil.byte2hex(scanData, 17, 2) + "-" +
                 NumConvertUtil.byte2hex(scanData, 19, 6);
-        this.rssi = (int) kalmanFilter.doFilter(rssi);
         this.updateTime = System.currentTimeMillis();
     }
 
