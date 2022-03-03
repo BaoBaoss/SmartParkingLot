@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.cetuer.smartparkinglot.bluetooth.kalman.KalmanFilter;
 import com.cetuer.smartparkinglot.utils.CalculateUtil;
 import com.cetuer.smartparkinglot.utils.NumConvertUtil;
 

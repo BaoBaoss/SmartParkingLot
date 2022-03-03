@@ -1,33 +1,26 @@
 package com.cetuer.smartparkinglot.bluetooth;
 
 import android.app.Activity;
-import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.location.LocationManager;
 import android.os.Handler;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.cetuer.smartparkinglot.bluetooth.kalman.KalmanSingleton;
-import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceFragment;
+import com.cetuer.smartparkinglot.bluetooth.filter.FilterSingleton;
 import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +108,7 @@ public class BleManager {
             //refreshDevice();
             int rssi = result.getRssi();
             String address = result.getDevice().getAddress();
-            BleDevice bleDevice = new BleDevice(result.getDevice(), (int) KalmanSingleton.getKalman(address).doFilter(rssi), result.getScanRecord().getBytes());
+            BleDevice bleDevice = new BleDevice(result.getDevice(), (int) FilterSingleton.getFilter(address).doFilter(rssi), result.getScanRecord().getBytes());
             devices.put(address, bleDevice);
             bleDevicesData.setValue(new ArrayList<>(devices.values()));
         }

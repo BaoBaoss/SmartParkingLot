@@ -1,10 +1,10 @@
-package com.cetuer.smartparkinglot.bluetooth.kalman;
+package com.cetuer.smartparkinglot.bluetooth.filter;
 
 /**
  * Created by Cetuer on 2021/10/2 19:36.
  * Kalman滤波, 参考：https://blog.csdn.net/qq_34193940/article/details/80569397
  */
-public class KalmanFilter {
+public class KalmanFilter implements RSSIFilter {
     /**
      * k-1 时刻的滤波，即是 k-1 时刻的值
      */
@@ -42,6 +42,7 @@ public class KalmanFilter {
 
     /**
      * 初始化
+     *
      * @param Q 预测噪声方差 由系统外部测定给定
      * @param R 测量噪声方差 由系统外部测定给定
      */
