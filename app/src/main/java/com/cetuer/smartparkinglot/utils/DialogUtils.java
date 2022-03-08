@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Cetuer on 2021/8/30 18:20.
  */
-public class MaterialDialogUtils {
+public class DialogUtils {
 
     /**
      * 显示带有主题的对话框
@@ -365,5 +365,27 @@ public class MaterialDialogUtils {
         return builder;
     }
 
+    private static LoadingDialog loadingDialog;
+
+    /**
+     * 初始化等待对话框
+     * @param context 上下文
+     */
+    public static void initLoadingDialog(Context context) {
+        loadingDialog = new LoadingDialog(context);
+    }
+    /**
+     * 显示网络等待对话框
+     */
+    public static void showLoadingDialog() {
+        loadingDialog.show();
+    }
+
+    /**
+     * 关闭网络等待对话框
+     */
+    public static void dismissLoadingDialog() {
+        loadingDialog.dismiss();;
+    }
 }
 

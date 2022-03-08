@@ -16,7 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.cetuer.smartparkinglot.bluetooth.filter.FilterSingleton;
 import com.cetuer.smartparkinglot.utils.KLog;
-import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
+import com.cetuer.smartparkinglot.utils.DialogUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -39,11 +39,6 @@ public class BleManager {
      * 外部获取的蓝牙设备列表
      */
     private final MutableLiveData<List<BleDevice>> bleDevicesData = new MutableLiveData<>();
-
-    /**
-     * 默认过滤蓝牙地址
-     */
-    private final String[] defaultAddress = {"60:77:71:C3:2B:CB", "60:77:71:C3:27:72", "60:77:71:C3:2E:E7"};
 
     /**
      * rssi阈值(暂未使用)
@@ -213,7 +208,7 @@ public class BleManager {
      * 显示是否打开蓝牙对话框
      */
     public void showOpenToothDialog() {
-        MaterialDialogUtils.showBasicDialog(context, "打开蓝牙", "检测到您未打开蓝牙，是否打开蓝牙？")
+        DialogUtils.showBasicDialog(context, "打开蓝牙", "检测到您未打开蓝牙，是否打开蓝牙？")
                 .onPositive((dialog, which) -> enableBluetooth())
                 .onNegative((dialog, which) -> ToastUtils.showShortToast(context, "请打开蓝牙"))
                 .show();
@@ -248,18 +243,11 @@ public class BleManager {
     }
 
     /**
-     * 根据默认地址扫描
-     */
-    public void scanByFilter() {
-        scanByFilter(defaultAddress);
-    }
-
-    /**
      * 根据地址列表扫描设备
      *
      * @param addresses 地址列表
      */
-    public void scanByFilter(String[] addresses) {
+    public void scanByFilter(List<String> addresses) {
         if(scanning) {
             KLog.w("已经在扫描了...");
             return;

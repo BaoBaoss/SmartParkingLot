@@ -1,29 +1,20 @@
 package com.cetuer.smartparkinglot.ui.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cetuer.smartparkinglot.R;
 import com.cetuer.smartparkinglot.bluetooth.BleDevice;
 import com.cetuer.smartparkinglot.databinding.IbeaconItemBinding;
-import com.cetuer.smartparkinglot.utils.KLog;
-import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

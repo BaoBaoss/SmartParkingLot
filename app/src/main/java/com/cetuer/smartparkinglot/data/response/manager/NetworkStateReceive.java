@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.cetuer.smartparkinglot.response.manager;
+package com.cetuer.smartparkinglot.data.response.manager;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.widget.Toast;
 
 import com.cetuer.smartparkinglot.utils.NetworkUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;

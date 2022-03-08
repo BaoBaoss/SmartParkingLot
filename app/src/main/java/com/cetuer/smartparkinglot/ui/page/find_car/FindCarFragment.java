@@ -29,7 +29,6 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mState.getText().observe(getViewLifecycleOwner(), s -> {
 
         });

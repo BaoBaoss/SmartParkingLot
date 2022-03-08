@@ -1,42 +1,29 @@
 package com.cetuer.smartparkinglot.ui.page.guidance;
 
 import android.Manifest;
-import android.content.Context;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.BR;
 import com.cetuer.smartparkinglot.R;
-import com.cetuer.smartparkinglot.bluetooth.BleDevice;
 import com.cetuer.smartparkinglot.bluetooth.BleManager;
+import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.databinding.FragmentGuidanceBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.adapter.IBeaconAdapter;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
-import com.cetuer.smartparkinglot.utils.CalculateUtil;
+import com.cetuer.smartparkinglot.utils.DialogUtils;
 import com.cetuer.smartparkinglot.utils.GpsUtils;
-import com.cetuer.smartparkinglot.utils.KLog;
-import com.cetuer.smartparkinglot.utils.MaterialDialogUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.permissionx.guolindev.PermissionX;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.stream.Collectors;
 
 public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
 
@@ -56,7 +43,7 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     protected DataBindingConfig getDataBindingConfig() {
         mIBeaconAdapter = new IBeaconAdapter(this.mActivity);
         mIBeaconAdapter.setOnItemClickListener((viewId, item, position) -> {
-            MaterialDialogUtils.showBasicDialog(mActivity, "提示", "是否设置参数？")
+            DialogUtils.showBasicDialog(mActivity, "提示", "是否设置参数？")
                     .onPositive((dialog, which) -> {
                         Bundle bundle = new Bundle();
                         bundle.putInt("devicePosition", position);
@@ -71,12 +58,14 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DialogUtils.initLoadingDialog(this.mActivity);
         mBinding.list.setItemAnimator(null);
         requestPermission();
-        BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> {
-            mState.list.setValue(bleDevices);
+        mState.beaconRequest.getBeaconLiveData().observe(this.mActivity, beaconDevices -> {
+            BleManager.getInstance().refreshScanner();
+            BleManager.getInstance().scanByFilter(beaconDevices.stream().map(BeaconDevice::getMac).collect(Collectors.toList()));
         });
-
+        BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> mState.list.setValue(bleDevices));
         mEvent.isOpenBluetooth().observe(mActivity, openBluetooth -> {
             mOpenBluetooth = openBluetooth;
             controlBluetooth();
@@ -85,9 +74,6 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
             mOpenGps = openGps;
             controlBluetooth();
         });
-        /*mState.getText().observe(getViewLifecycleOwner(), s -> {
-
-        });*/
     }
 
     /**
@@ -126,8 +112,7 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
                 && mOpenGps
                 && PermissionX.isGranted(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
                 && PermissionX.isGranted(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            BleManager.getInstance().refreshScanner();
-            BleManager.getInstance().scanByFilter();
+            mState.beaconRequest.requestBeaconList();
         }
         if (!mOpenBluetooth || !mOpenGps) {
             BleManager.getInstance().stopScan();

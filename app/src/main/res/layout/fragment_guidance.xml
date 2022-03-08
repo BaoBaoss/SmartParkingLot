@@ -7,13 +7,13 @@
 
         <variable
             name="vm"
-            type="com.cetuer.smartparkinglot.ui.page.guidance.GuidanceViewModel" />
+            type   ="com.cetuer.smartparkinglot.ui.page.guidance.GuidanceViewModel" />
         <variable
             name="adapter"
             type="androidx.recyclerview.widget.RecyclerView.Adapter" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.page.guidance.GuidanceFragment">
@@ -25,5 +25,5 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </layout>

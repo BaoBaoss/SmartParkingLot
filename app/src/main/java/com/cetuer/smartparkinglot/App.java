@@ -26,7 +26,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.cetuer.smartparkinglot.bluetooth.BleManager;
 import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.Utils;
 

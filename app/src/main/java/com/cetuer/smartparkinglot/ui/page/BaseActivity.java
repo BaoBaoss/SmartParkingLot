@@ -16,7 +16,6 @@
 
 package com.cetuer.smartparkinglot.ui.page;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseArray;
 
@@ -28,10 +27,8 @@ import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
-import com.cetuer.smartparkinglot.response.manager.NetworkStateManager;
-import com.cetuer.smartparkinglot.utils.BarUtils;
+import com.cetuer.smartparkinglot.data.response.manager.NetworkStateManager;
 
 /**
  * Create by KunMinX at 19/8/1
@@ -54,14 +51,7 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
         for(int length = bindingParams.size(); i < length; ++i) {
             mBinding.setVariable(bindingParams.keyAt(i), bindingParams.valueAt(i));
         }
-
-
-
-        /*BarUtils.setStatusBarColor(this, Color.TRANSPARENT);
-        BarUtils.setStatusBarLightMode(this, true);*/
-
         getLifecycle().addObserver(NetworkStateManager.getInstance());
-
     }
 
     /**

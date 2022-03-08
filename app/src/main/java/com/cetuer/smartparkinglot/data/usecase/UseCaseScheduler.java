@@ -1,5 +1,5 @@
 
-package com.cetuer.smartparkinglot.domain.usecase;
+package com.cetuer.smartparkinglot.data.usecase;
 
 /**
  * Interface for schedulers, see {@link UseCaseThreadPoolScheduler}.

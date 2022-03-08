@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <scut.carson_ho.kawaii_loadingview.Kawaii_LoadingView
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:blockColor="#03dac5"
+        app:fixBlock_Angle="5"
+        app:moveBlock_Angle="15"
+        app:blockInterval="5dp"
+        app:half_BlockWidth="10dp"
+        app:isClock_Wise="false"
+        app:moveSpeed="500"
+        app:move_Interpolator="@android:anim/bounce_interpolator"/>
+</RelativeLayout>
