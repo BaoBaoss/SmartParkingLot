@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type   ="com.cetuer.smartparkinglot.ui.page.guidance.GuidanceViewModel" />
+            type   ="com.cetuer.smartparkinglot.domain.message.SharedViewModel" />
         <variable
             name="adapter"
             type="androidx.recyclerview.widget.RecyclerView.Adapter" />

@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class FindCarViewModel extends ViewModel {
+import com.cetuer.smartparkinglot.data.request.FingerprintRequest;
 
+public class FindCarViewModel extends ViewModel {
+    public final FingerprintRequest fingerprintRequest = new FingerprintRequest();
     private MutableLiveData<String> mText;
 
     public FindCarViewModel() {
@@ -13,7 +15,7 @@ public class FindCarViewModel extends ViewModel {
         mText.setValue("This is dashboard fragment");
     }
 
-    public LiveData<String> getText() {
+    public MutableLiveData<String> getText() {
         return mText;
     }
 }

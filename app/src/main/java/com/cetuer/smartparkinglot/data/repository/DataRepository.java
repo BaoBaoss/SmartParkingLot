@@ -1,12 +1,16 @@
 package com.cetuer.smartparkinglot.data.repository;
 
 import com.cetuer.smartparkinglot.data.api.BeaconService;
+import com.cetuer.smartparkinglot.data.api.FingerprintService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
+import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
+import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.data.response.ResultData;
 import com.cetuer.smartparkinglot.data.response.callback.BaseCallBack;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -62,6 +66,20 @@ public class DataRepository {
         retrofit.create(BeaconService.class).list().enqueue(new BaseCallBack<List<BeaconDevice>>() {
             @Override
             public void onSuccessful(List<BeaconDevice> data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 定位
+     * @param result 回调
+     * @param RSSIs 信标强度列表
+     */
+    public void location(ResultData.Result<BeaconPoint> result, List<BeaconRssi> RSSIs) {
+        retrofit.create(FingerprintService.class).location(RSSIs).enqueue(new BaseCallBack<BeaconPoint>() {
+            @Override
+            public void onSuccessful(BeaconPoint data) {
                 result.onResult(data);
             }
         });

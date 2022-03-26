@@ -29,8 +29,6 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
 
     private GuidanceViewModel mState;
     private SharedViewModel mEvent;
-    private boolean mOpenBluetooth;
-    private boolean mOpenGps;
     private IBeaconAdapter mIBeaconAdapter;
 
     @Override
@@ -51,71 +49,13 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
                     })
                     .show();
         });
-        return new DataBindingConfig(R.layout.fragment_guidance, BR.vm, mState)
+        return new DataBindingConfig(R.layout.fragment_guidance, BR.vm, mEvent)
                 .addBindingParam(BR.adapter, mIBeaconAdapter);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DialogUtils.initLoadingDialog(this.mActivity);
         mBinding.list.setItemAnimator(null);
-        requestPermission();
-        mState.beaconRequest.getBeaconLiveData().observe(this.mActivity, beaconDevices -> {
-            BleManager.getInstance().refreshScanner();
-            BleManager.getInstance().scanByFilter(beaconDevices.stream().map(BeaconDevice::getMac).collect(Collectors.toList()));
-        });
-        BleManager.getInstance().getScanDeviceEvent().observe(this.mActivity, bleDevices -> mState.list.setValue(bleDevices));
-        mEvent.isOpenBluetooth().observe(mActivity, openBluetooth -> {
-            mOpenBluetooth = openBluetooth;
-            controlBluetooth();
-        });
-        mEvent.isOpenGPS().observe(mActivity, openGps -> {
-            mOpenGps = openGps;
-            controlBluetooth();
-        });
-    }
-
-    /**
-     * 请求权限
-     */
-    private void requestPermission() {
-        PermissionX.init(this)
-                .permissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-                .onForwardToSettings((scope, deniedList) -> scope.showForwardToSettingsDialog(deniedList, "您永久拒绝了以下权限，是否需要重新打开？", "设置", "取消"))
-                .onExplainRequestReason((scope, deniedList) -> {
-                    scope.showRequestReasonDialog(deniedList, "为了获取蓝牙定位需要如下权限", "确定", "取消");
-                })
-                .request((allGranted, grantedList, deniedList) -> {
-                    if (!allGranted) {
-                        ToastUtils.showShortToast(this.getContext(), "权限被拒绝，无法搜索蓝牙");
-                    } else {
-                        boolean isOpenBlueTooth = BleManager.getInstance().isBlueEnable();
-                        boolean isOpenGps = GpsUtils.checkLocation(mActivity);
-                        mEvent.isOpenBluetooth().setValue(isOpenBlueTooth);
-                        mEvent.isOpenGPS().setValue(isOpenGps);
-                        if (!isOpenBlueTooth) {
-                            BleManager.getInstance().showOpenToothDialog();
-                        }
-                        if (!isOpenGps) {
-                            ToastUtils.showShortToast(mActivity, "需要打开位置权限才可以搜索到蓝牙设备");
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 控制蓝牙开启或关闭
-     */
-    public void controlBluetooth() {
-        if (mOpenBluetooth
-                && mOpenGps
-                && PermissionX.isGranted(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                && PermissionX.isGranted(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            mState.beaconRequest.requestBeaconList();
-        }
-        if (!mOpenBluetooth || !mOpenGps) {
-            BleManager.getInstance().stopScan();
-        }
     }
 }
