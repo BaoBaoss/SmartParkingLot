@@ -2,9 +2,11 @@ package com.cetuer.smartparkinglot.data.repository;
 
 import com.cetuer.smartparkinglot.data.api.BeaconService;
 import com.cetuer.smartparkinglot.data.api.FingerprintService;
+import com.cetuer.smartparkinglot.data.api.ParkingLotService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
+import com.cetuer.smartparkinglot.data.bean.ParkingLot;
 import com.cetuer.smartparkinglot.data.response.ResultData;
 import com.cetuer.smartparkinglot.data.response.callback.BaseCallBack;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
@@ -26,7 +28,7 @@ public class DataRepository {
     /**
      * 接口地址
      */
-    private static final String BASE_URL = "http://192.168.0.104:9089/app/parking-app/";
+    private static final String BASE_URL = "http://192.168.0.111:9089/app/parking-app/";
     /**
      * 超时时间10秒
      */
@@ -80,6 +82,20 @@ public class DataRepository {
         retrofit.create(FingerprintService.class).location(RSSIs).enqueue(new BaseCallBack<BeaconPoint>() {
             @Override
             public void onSuccessful(BeaconPoint data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 停车场列表
+     * @param result 回调
+     */
+    public void parkingLotList(ResultData.Result<List<ParkingLot>> result) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(ParkingLotService.class).list().enqueue(new BaseCallBack<List<ParkingLot>>() {
+            @Override
+            public void onSuccessful(List<ParkingLot> data) {
                 result.onResult(data);
             }
         });

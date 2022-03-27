@@ -47,8 +47,6 @@ dependencies {
 
     //权限请求
     implementation 'com.guolindev.permissionx:permissionx:1.5.1'
-    //ble蓝牙操作
-    implementation 'com.github.Jasonchenlijian:FastBle:2.4.0'
 
     //material-dialogs
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
@@ -61,6 +59,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+
+    //高德地图
+//    implementation 'com.amap.api:3dmap:latest.integration'
+    implementation 'com.amap.api:navi-3dmap:latest.integration'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

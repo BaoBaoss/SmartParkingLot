@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         viewPagerAdapter.addFragment(new FindCarFragment());
         viewPagerAdapter.addFragment(new CarportQueryFragment());
         viewPagerAdapter.addFragment(new MineFragment());
+        mBinding.mainViewPager.setUserInputEnabled(false);
         mBinding.mainViewPager.setAdapter(viewPagerAdapter);
         mState.beaconRequest.getBeaconLiveData().observe(this, beaconDevices -> {
             BleManager.getInstance().refreshScanner();

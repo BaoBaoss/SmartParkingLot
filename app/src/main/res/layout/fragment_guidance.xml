@@ -7,22 +7,15 @@
 
         <variable
             name="vm"
-            type   ="com.cetuer.smartparkinglot.domain.message.SharedViewModel" />
-        <variable
-            name="adapter"
-            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+            type="com.cetuer.smartparkinglot.ui.page.guidance.GuidanceViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.page.guidance.GuidanceFragment">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
-            adapter="@{adapter}"
-            submitList="@{vm.list}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        <com.amap.api.maps.MapView
+            android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>

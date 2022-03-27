@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.amap.api.maps.MapsInitializer;
 import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.Utils;
 
@@ -46,6 +47,8 @@ public class App extends Application implements ViewModelStoreOwner {
         mAppViewModelStore = new ViewModelStore();
         Utils.init(this);
         KLog.init(true);
+        MapsInitializer.updatePrivacyShow(this,true,true);
+        MapsInitializer.updatePrivacyAgree(this,true);
     }
 
     @NonNull
