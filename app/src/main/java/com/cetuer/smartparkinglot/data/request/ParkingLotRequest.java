@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class ParkingLotRequest implements BaseRequest {
     private MutableLiveData<List<ParkingLot>> parkingLotList = new MutableLiveData<>();
+    private MutableLiveData<Integer> parkingLotId = new MutableLiveData<>();
 
     /**
      * 请求获得停车场列表
@@ -21,7 +22,18 @@ public class ParkingLotRequest implements BaseRequest {
         DataRepository.getInstance().parkingLotList(parkingLotList::postValue);
     }
 
+    /**
+     * 请求获得停车场id
+     */
+    public void requestParkingIdByLatLng(Double longitude, Double latitude) {
+        DataRepository.getInstance().parkingIdByLatLng(parkingLotId::postValue, longitude, latitude);
+    }
+
     public MutableLiveData<List<ParkingLot>> getParkingLotList() {
         return parkingLotList;
+    }
+
+    public MutableLiveData<Integer> getParkingLotId() {
+        return parkingLotId;
     }
 }

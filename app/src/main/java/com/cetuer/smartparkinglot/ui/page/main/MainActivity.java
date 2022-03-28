@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.cetuer.smartparkinglot.App;
@@ -37,6 +38,7 @@ import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.permissionx.guolindev.PermissionX;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -49,10 +51,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
      */
     private MainActivityViewModel mState;
     private SharedViewModel mEvent;
-    private boolean mOpenBluetooth;
-    private boolean mOpenGps;
 
-     /**
+    /**
      * 再按一次退出程序
      */
     private long mExitTime;
@@ -82,19 +82,27 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         viewPagerAdapter.addFragment(new MineFragment());
         mBinding.mainViewPager.setUserInputEnabled(false);
         mBinding.mainViewPager.setAdapter(viewPagerAdapter);
-        mState.beaconRequest.getBeaconLiveData().observe(this, beaconDevices -> {
+        //关闭蓝牙，停止扫描
+        mEvent.openBluetooth.observe(this, openBluetooth -> {
+            if (!openBluetooth) {
+                BleManager.getInstance().stopScan();
+            }
+        });
+        //关闭位置信息，停止扫描
+        mEvent.openGPS.observe(this, openGps -> {
+            if (!openGps) {
+                BleManager.getInstance().stopScan();
+            }
+        });
+        //过滤信息改变，重新扫描
+        mEvent.filterMacs.observe(this, macs -> {
+            BleManager.getInstance().stopScan();
             BleManager.getInstance().refreshScanner();
-            BleManager.getInstance().scanByFilter(beaconDevices.stream().map(BeaconDevice::getMac).collect(Collectors.toList()));
+            BleManager.getInstance().scanByFilter(macs);
         });
+        mEvent.beaconRequest.getBeaconLiveData().observe(this, beaconDevices -> mEvent.filterMacs.postValue(beaconDevices.stream().map(BeaconDevice::getMac).collect(Collectors.toList())));
+        //扫描到的蓝牙放进列表
         BleManager.getInstance().getScanDeviceEvent().observe(this, bleDevices -> mEvent.list.setValue(bleDevices));
-        mEvent.isOpenBluetooth().observe(this, openBluetooth -> {
-            mOpenBluetooth = openBluetooth;
-            controlBluetooth();
-        });
-        mEvent.isOpenGPS().observe(this, openGps -> {
-            mOpenGps = openGps;
-            controlBluetooth();
-        });
         //注册广播
         mBlueToothReceiver = new BlueToothReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -119,8 +127,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     } else {
                         boolean isOpenBlueTooth = BleManager.getInstance().isBlueEnable();
                         boolean isOpenGps = GpsUtils.checkLocation(this);
-                        mEvent.isOpenBluetooth().setValue(isOpenBlueTooth);
-                        mEvent.isOpenGPS().setValue(isOpenGps);
+                        mEvent.openBluetooth.setValue(isOpenBlueTooth);
+                        mEvent.openGPS.setValue(isOpenGps);
                         if (!isOpenBlueTooth) {
                             BleManager.getInstance().showOpenToothDialog();
                         }
@@ -130,22 +138,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     }
                 });
     }
-
-    /**
-     * 控制蓝牙开启或关闭
-     */
-    public void controlBluetooth() {
-        if (mOpenBluetooth
-                && mOpenGps
-                && PermissionX.isGranted(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                && PermissionX.isGranted(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            mState.beaconRequest.requestBeaconList();
-        }
-        if (!mOpenBluetooth || !mOpenGps) {
-            BleManager.getInstance().stopScan();
-        }
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -163,7 +155,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             super.onBackPressed();
         } else {
             mExitTime = System.currentTimeMillis();
-            ToastUtils.showShortToast(this,  "再按一次退出应用");
+            ToastUtils.showShortToast(this, "再按一次退出应用");
         }
     }
 
@@ -174,6 +166,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
         /**
          * nav选中时切换viewPage
+         *
          * @param item 选中的item
          * @return 当前页面是否可用
          */
@@ -197,6 +190,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
         /**
          * viewPage选中时切换nav
+         *
          * @param position 选中下标
          */
         @Override

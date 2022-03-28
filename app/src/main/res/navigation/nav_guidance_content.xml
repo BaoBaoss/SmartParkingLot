@@ -12,12 +12,12 @@
         tools:layout="@layout/fragment_guidance">
         <action
             android:id="@+id/action_guidance_to_configuration"
-            app:destination="@id/configuration_fragment"/>
+            app:destination="@id/parking_lot_nav_fragment"/>
     </fragment>
     <fragment
-        android:id="@+id/configuration_fragment"
-        android:name="com.cetuer.smartparkinglot.ui.page.guidance.ConfigurationFragment"
-        android:label="配置参数"
-        tools:layout="@layout/fragment_configuration">
+        android:id="@+id/parking_lot_nav_fragment"
+        android:name="com.cetuer.smartparkinglot.ui.page.guidance.ParkingLotNavFragment"
+        android:label="停车场导航"
+        tools:layout="@layout/fragment_parking_lot_nav">
     </fragment>
 </navigation>

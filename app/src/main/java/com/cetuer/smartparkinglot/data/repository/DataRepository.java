@@ -28,7 +28,7 @@ public class DataRepository {
     /**
      * 接口地址
      */
-    private static final String BASE_URL = "http://192.168.0.111:9089/app/parking-app/";
+    private static final String BASE_URL = "http://192.168.0.104:9089/app/parking-app/";
     /**
      * 超时时间10秒
      */
@@ -62,10 +62,11 @@ public class DataRepository {
     /**
      * 网络请求信标信息
      * @param result 回调
+     * @param parkingLotId 停车场编号
      */
-    public void listBeacon(ResultData.Result<List<BeaconDevice>> result) {
+    public void listBeacon(ResultData.Result<List<BeaconDevice>> result, Integer parkingLotId) {
         DialogUtils.showLoadingDialog();
-        retrofit.create(BeaconService.class).list().enqueue(new BaseCallBack<List<BeaconDevice>>() {
+        retrofit.create(BeaconService.class).listByParkingLotId(parkingLotId).enqueue(new BaseCallBack<List<BeaconDevice>>() {
             @Override
             public void onSuccessful(List<BeaconDevice> data) {
                 result.onResult(data);
@@ -96,6 +97,22 @@ public class DataRepository {
         retrofit.create(ParkingLotService.class).list().enqueue(new BaseCallBack<List<ParkingLot>>() {
             @Override
             public void onSuccessful(List<ParkingLot> data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 根据经纬度查询停车场id
+     * @param result 返回值
+     * @param longitude 经度
+     * @param latitude 纬度
+     */
+    public void parkingIdByLatLng(ResultData.Result<Integer> result, Double longitude, Double latitude) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(ParkingLotService.class).parkingIdByLatLng(longitude, latitude).enqueue(new BaseCallBack<Integer>() {
+            @Override
+            public void onSuccessful(Integer data) {
                 result.onResult(data);
             }
         });

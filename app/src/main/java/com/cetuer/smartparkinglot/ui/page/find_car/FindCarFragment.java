@@ -26,7 +26,7 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
 
     private FindCarViewModel mState;
     private SharedViewModel mEvent;
-    private int scanCount = 10;
+
 
     @Override
     protected void initViewModel() {
@@ -42,18 +42,6 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEvent.list.observe(getViewLifecycleOwner(), bleDevices -> {
-            if(scanCount < 10) {
-                scanCount++;
-                return;
-            }
-            scanCount = 0;
-            List<BeaconRssi> RSSIs = bleDevices.stream().map(ble -> new BeaconRssi(ble.getDevice().getAddress(), ble.getRssi().doubleValue())).collect(Collectors.toList());
-            mState.fingerprintRequest.requestLocation(RSSIs);
-        });
-        mState.fingerprintRequest.getLocationPoint().observe(getViewLifecycleOwner(), point -> {
-            mState.getText().setValue("坐标为：(" + point.getX() + "," + point.getY() + ")");
-        });
         mState.getText().observe(getViewLifecycleOwner(), s -> {
 
         });

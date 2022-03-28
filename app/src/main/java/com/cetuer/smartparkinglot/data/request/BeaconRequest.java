@@ -12,16 +12,16 @@ import java.util.List;
  * 信标 Request
  */
 public class BeaconRequest implements BaseRequest {
+
     private final MutableLiveData<List<BeaconDevice>> beaconLiveData = new MutableLiveData<>();
 
     /**
      * 请求信标列表
      */
-    public void requestBeaconList() {
-        DataRepository.getInstance().listBeacon(beaconLiveData::postValue);
+    public void requestBeaconList(Integer parkingLotId) {
+        DataRepository.getInstance().listBeacon(beaconLiveData::postValue, parkingLotId);
     }
     public MutableLiveData<List<BeaconDevice>> getBeaconLiveData() {
         return beaconLiveData;
     }
-
 }

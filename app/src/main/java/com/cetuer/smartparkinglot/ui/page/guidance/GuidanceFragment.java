@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amap.api.maps.AMap;
@@ -117,12 +118,6 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
         });
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mBinding.map.onSaveInstanceState(outState);
-    }
-
     public void addLifecycleListener() {
         getLifecycle().addObserver(new LifecycleObserver() {
             @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -189,7 +184,13 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
             public void onExitPage(int i) {
                 if (dialog != null && dialog.isShowing()) return;
                 dialog = DialogUtils.showBasicDialog(GuidanceFragment.this.mActivity, "提示", "是否进入停车场内部导航？")
-                        .onPositive((dialog, which) -> KLog.e("跳转"))
+                        .onPositive((dialog, which) -> {
+                            //传递当前停车场经纬度
+                            Bundle args = new Bundle();
+                            args.putDouble("longitude", marker.getPosition().longitude);
+                            args.putDouble("latitude", marker.getPosition().latitude);
+                            NavHostFragment.findNavController(GuidanceFragment.this).navigate(R.id.action_guidance_to_configuration, args);
+                        })
                         .onNegative((dialog, which) -> dialog.dismiss())
                         .show();
             }

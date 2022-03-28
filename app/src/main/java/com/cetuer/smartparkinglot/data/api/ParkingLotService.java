@@ -10,6 +10,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * Created by Cetuer on 2022/3/26 23:51.
@@ -22,4 +23,13 @@ public interface ParkingLotService {
      */
     @GET("parkingLot/list")
     Call<ResultData<List<ParkingLot>>> list();
+
+    /**
+     * 根据经纬度获取停车场id
+     * @param longitude 经度
+     * @param latitude 纬度
+     * @return 停车场id
+     */
+    @GET("parkingLot/parkingIdByLatLng")
+    Call<ResultData<Integer>> parkingIdByLatLng(@Query("longitude") Double longitude, @Query("latitude") Double latitude);
 }

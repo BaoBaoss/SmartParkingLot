@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cetuer.smartparkinglot.bluetooth.BleDevice;
+import com.cetuer.smartparkinglot.data.request.BeaconRequest;
 
 import java.util.List;
 
@@ -12,23 +13,25 @@ import java.util.List;
  * 跨页面共享ViewModel
  */
 public class SharedViewModel extends ViewModel {
+    public final BeaconRequest beaconRequest = new BeaconRequest();
     /**
      * 是否打开蓝牙
      */
-    private final MutableLiveData<Boolean> openBluetooth = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> openBluetooth = new MutableLiveData<>(false);
 
     /**
      * 是否打开GPS
      */
-    private final MutableLiveData<Boolean> openGPS = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> openGPS = new MutableLiveData<>(false);
 
+    /**
+     * 扫描到的蓝牙设备列表
+     */
     public final MutableLiveData<List<BleDevice>> list = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> isOpenBluetooth() {
-        return openBluetooth;
-    }
+    /**
+     * 需要扫描信标的mac
+     */
+    public final MutableLiveData<List<String>> filterMacs = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> isOpenGPS() {
-        return openGPS;
-    }
 }

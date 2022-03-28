@@ -32,18 +32,18 @@ public class BlueToothReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothAdapter.STATE_OFF:
                     KLog.i("STATE_OFF");
-                    mEvent.isOpenBluetooth().setValue(false);
+                    mEvent.openBluetooth.setValue(false);
                     break;
                 case BluetoothAdapter.STATE_TURNING_ON:
                     KLog.i("STATE_TURNING_ON");
                     break;
                 case BluetoothAdapter.STATE_ON:
                     KLog.i("STATE_ON");
-                    mEvent.isOpenBluetooth().setValue(true);
+                    mEvent.openBluetooth.setValue(true);
                     break;
             }
         } else if (action.equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
-            mEvent.isOpenGPS().setValue(GpsUtils.checkLocation(context));
+            mEvent.openGPS.setValue(GpsUtils.checkLocation(context));
         }
     }
 }
