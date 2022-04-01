@@ -3,16 +3,17 @@ package com.cetuer.smartparkinglot.data.repository;
 import com.cetuer.smartparkinglot.data.api.BeaconService;
 import com.cetuer.smartparkinglot.data.api.FingerprintService;
 import com.cetuer.smartparkinglot.data.api.ParkingLotService;
+import com.cetuer.smartparkinglot.data.api.ParkingSpaceService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.data.bean.ParkingLot;
+import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
 import com.cetuer.smartparkinglot.data.response.ResultData;
 import com.cetuer.smartparkinglot.data.response.callback.BaseCallBack;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -28,7 +29,7 @@ public class DataRepository {
     /**
      * 接口地址
      */
-    private static final String BASE_URL = "http://192.168.0.104:9089/app/parking-app/";
+    private static final String BASE_URL = "http://192.168.0.107:9089/app/parking-app/";
     /**
      * 超时时间10秒
      */
@@ -58,6 +59,20 @@ public class DataRepository {
         return S_REQUEST_MANAGER;
     }
 
+    /**
+     * 网络请求终点坐标
+     * @param result 回调
+     * @param parkingLotId 停车场编号
+     */
+    public void endPointByParkingLotId(ResultData.Result<BeaconPoint> result, Integer parkingLotId) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(BeaconService.class).endPointByParkingLotId(parkingLotId).enqueue(new BaseCallBack<BeaconPoint>() {
+            @Override
+            public void onSuccessful(BeaconPoint data) {
+                result.onResult(data);
+            }
+        });
+    }
 
     /**
      * 网络请求信标信息
@@ -116,5 +131,32 @@ public class DataRepository {
                 result.onResult(data);
             }
         });
+    }
+
+    /**
+     * 根据停车场编号获得其车位列表
+     * @param result 回调
+     * @param parkingLotId 停车场编号
+     */
+    public void parkingSpaceByParkingId(ResultData.Result<List<ParkingSpace>> result, Integer parkingLotId) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(ParkingSpaceService.class).listByParkingId(parkingLotId).enqueue(new BaseCallBack<List<ParkingSpace>>() {
+            @Override
+            public void onSuccessful(List<ParkingSpace> data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 改变车位状态
+     * @param result 回调
+     * @param parkingId 停车场编号
+     * @param x x坐标
+     * @param y y坐标
+     * @param status 状态
+     */
+    public void changeSpaceStatus(ResultData.Result<Void> result, Integer parkingId, Integer x, Integer y, Integer status) {
+        DialogUtils.showLoadingDialog();
     }
 }
