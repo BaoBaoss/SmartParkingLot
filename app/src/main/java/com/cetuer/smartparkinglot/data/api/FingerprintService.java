@@ -21,6 +21,6 @@ public interface FingerprintService {
      * @param RSSIs 当前位置rssi列表
      * @return 当前位置
      */
-    @POST("fingerprint/location")
+    @POST("parking-app/fingerprint/location")
     Call<ResultData<BeaconPoint>> location(@Body List<BeaconRssi> RSSIs);
 }

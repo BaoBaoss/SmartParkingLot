@@ -11,12 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 
 import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.BR;
 import com.cetuer.smartparkinglot.R;
-import com.cetuer.smartparkinglot.bluetooth.BleDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
@@ -26,7 +24,6 @@ import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
 import com.cetuer.smartparkinglot.utils.KLog;
-import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.permissionx.guolindev.PermissionX;
 
 import java.util.ArrayList;
@@ -57,7 +54,7 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
     //上一个定位的坐标颜色
     private Integer lastLocationColor;
     //导航状态：0->未开始导航,1->导航中,2->导航结束
-    private Integer navState;
+    private Integer navState = 0;
     //导航停车位的坐标
     private BeaconPoint spacePoint;
 
@@ -76,19 +73,19 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mState.parkingLotRequest.requestParkingIdByLatLng(getArguments().getDouble("longitude"), getArguments().getDouble("latitude"));
-        mState.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingLotId -> {
+        mEvent.parkingLotRequest.requestParkingIdByLatLng(getArguments().getDouble("longitude"), getArguments().getDouble("latitude"));
+        mEvent.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingLotId -> {
             this.parkingId = parkingLotId;
             //获得停车场的终点坐标
-            mState.beaconRequest.requestEndPoint(parkingLotId);
+            mEvent.beaconRequest.requestEndPoint(parkingLotId);
         });
         //获得终点坐标后获得停车位
-        mState.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
+        mEvent.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
             endPoint = beaconPoint;
-            mState.parkingSpaceRequest.requestParkingSpace(parkingId);
+            mEvent.parkingSpaceRequest.requestParkingSpace(parkingId);
         });
         //获得停车位后绘制地图
-        mState.parkingSpaceRequest.getParkingSpaceList().observe(getViewLifecycleOwner(), parkingSpaces -> {
+        mEvent.parkingSpaceRequest.getParkingSpaceList().observe(getViewLifecycleOwner(), parkingSpaces -> {
             ParkingLotNavFragment.this.parkingSpaces = parkingSpaces;
             drawMap();
         });
@@ -100,9 +97,9 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
             }
             scanCount = 0;
             List<BeaconRssi> RSSIs = bleDevices.stream().map(ble -> new BeaconRssi(ble.getDevice().getAddress(), ble.getRssi().doubleValue())).collect(Collectors.toList());
-            mState.fingerprintRequest.requestLocation(RSSIs);
+            mEvent.fingerprintRequest.requestLocation(RSSIs);
         });
-        mState.fingerprintRequest.getLocationPoint().observe(getViewLifecycleOwner(), point -> {
+        mEvent.fingerprintRequest.getLocationPoint().observe(getViewLifecycleOwner(), point -> {
             //上一个位置还原颜色，当前位置变色
             if (lastLocationPoint != null) {
                 coordinate.get(lastLocationPoint.getX()).get(lastLocationPoint.getY()).setBackgroundColor(lastLocationColor);
@@ -110,6 +107,7 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
             lastLocationPoint = point;
             lastLocationColor = ((ColorDrawable) coordinate.get(point.getX()).get(point.getY()).getBackground()).getColor();
             coordinate.get(point.getX()).get(point.getY()).setBackgroundColor(Color.BLUE);
+            KLog.e(this.navState);
             //如果正在导航，并且当前位置与选中的车位坐标一致则停车成功
             if(this.navState == 1 && point.getX().equals(spacePoint.getX()) && point.getY().equals(spacePoint.getY())) {
                 //发送请求

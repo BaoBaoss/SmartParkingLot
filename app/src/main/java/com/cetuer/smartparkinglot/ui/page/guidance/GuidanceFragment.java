@@ -16,7 +16,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -29,18 +28,20 @@ import com.amap.api.navi.AmapNaviParams;
 import com.amap.api.navi.AmapNaviType;
 import com.amap.api.navi.INaviInfoCallback;
 import com.amap.api.navi.model.AMapNaviLocation;
+import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.BR;
 import com.cetuer.smartparkinglot.R;
 import com.cetuer.smartparkinglot.data.bean.ParkingLot;
 import com.cetuer.smartparkinglot.databinding.FragmentGuidanceBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
+import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
-import com.cetuer.smartparkinglot.utils.KLog;
 
 public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
 
     private GuidanceViewModel mState;
+    private SharedViewModel mEvent;
     private AMap mAMap;
     //是否为首次定位
     private boolean firstLocation = true;
@@ -48,6 +49,7 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     @Override
     protected void initViewModel() {
         mState = getFragmentScopeViewModel(GuidanceViewModel.class);
+        mEvent = App.getInstance().getApplicationScopeViewModel(SharedViewModel.class);
     }
 
     @Override
@@ -61,8 +63,8 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
         mBinding.map.onCreate(savedInstanceState);
         initMap();
         addLifecycleListener();
-        mState.parkingLotRequest.requestList();
-        mState.parkingLotRequest.getParkingLotList().observe(getViewLifecycleOwner(), parkingLots -> {
+        mEvent.parkingLotRequest.requestList();
+        mEvent.parkingLotRequest.getParkingLotList().observe(getViewLifecycleOwner(), parkingLots -> {
             for (ParkingLot parkingLot : parkingLots) {
                 mAMap.addMarker(new MarkerOptions().
                         position(new LatLng(parkingLot.getLatitude(), parkingLot.getLongitude()))

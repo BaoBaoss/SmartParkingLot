@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.cetuer.smartparkinglot.ui.page.login.LoginActivityViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fafafa"
+        android:orientation="vertical"
+        tools:context=".ui.page.login.LoginActivity">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="90dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/LogoImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_launcher" />
+
+                <!--标题-->
+                <TextView
+                    android:id="@+id/TitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="智慧停车场•登录"
+                    android:textColor="#808080"
+                    android:textSize="30sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--嵌套线性布局-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <!--用户名输入-->
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="输入用户名"
+                    android:padding="15dp"
+                    android:singleLine="true"
+                    android:text="@={vm.username}"
+                    android:textSize="24sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <!--密码输入-->
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="输入用户密码"
+                    android:inputType="textPassword"
+                    android:maxLength="16"
+                    android:padding="15dp"
+                    android:singleLine="true"
+                    android:text="@={vm.password}"
+                    android:textSize="24sp" />
+            </androidx.cardview.widget.CardView>
+
+            <!--嵌套线性布局-->
+            <LinearLayout
+                android:id="@+id/LayoutButton"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <!--登录按钮-->
+                <Button
+                    android:id="@+id/login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/translucent_button"
+                    android:padding="15dp"
+                    android:text="登   录"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <!--注册按钮-->
+                <Button
+                    android:id="@+id/register"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/translucent_button"
+                    android:padding="15dp"
+                    android:text="注   册"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

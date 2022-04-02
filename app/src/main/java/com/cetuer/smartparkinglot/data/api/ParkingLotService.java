@@ -21,7 +21,7 @@ public interface ParkingLotService {
      * 获取停车场列表
      * @return 停车场列表
      */
-    @GET("parkingLot/list")
+    @GET("parking-app/parkingLot/list")
     Call<ResultData<List<ParkingLot>>> list();
 
     /**
@@ -30,6 +30,6 @@ public interface ParkingLotService {
      * @param latitude 纬度
      * @return 停车场id
      */
-    @GET("parkingLot/parkingIdByLatLng")
+    @GET("parking-app/parkingLot/parkingIdByLatLng")
     Call<ResultData<Integer>> parkingIdByLatLng(@Query("longitude") Double longitude, @Query("latitude") Double latitude);
 }

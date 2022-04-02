@@ -2,11 +2,13 @@ package com.cetuer.smartparkinglot.data.repository;
 
 import com.cetuer.smartparkinglot.data.api.BeaconService;
 import com.cetuer.smartparkinglot.data.api.FingerprintService;
+import com.cetuer.smartparkinglot.data.api.MemberService;
 import com.cetuer.smartparkinglot.data.api.ParkingLotService;
 import com.cetuer.smartparkinglot.data.api.ParkingSpaceService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
+import com.cetuer.smartparkinglot.data.bean.MemberLogin;
 import com.cetuer.smartparkinglot.data.bean.ParkingLot;
 import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
 import com.cetuer.smartparkinglot.data.response.ResultData;
@@ -29,7 +31,7 @@ public class DataRepository {
     /**
      * 接口地址
      */
-    private static final String BASE_URL = "http://192.168.0.107:9089/app/parking-app/";
+    private static final String BASE_URL = "http://192.168.0.106:9089/";
     /**
      * 超时时间10秒
      */
@@ -57,6 +59,35 @@ public class DataRepository {
 
     public static DataRepository getInstance() {
         return S_REQUEST_MANAGER;
+    }
+
+    /**
+     * 登录
+     * @param result 回调
+     * @param memberLogin 登录信息
+     */
+    public void login(ResultData.Result<String> result, MemberLogin memberLogin) {
+        retrofit.create(MemberService.class).login(memberLogin).enqueue(new BaseCallBack<String>() {
+            @Override
+            public void onSuccessful(String data) {
+                result.onResult(data);
+            }
+        });
+    }
+    
+    /**
+     * 注册
+     * @param result 回调
+     * @param memberInfo 会员信息
+     */
+    public void register(ResultData.Result<Void> result, MemberLogin memberInfo) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(MemberService.class).register(memberInfo).enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
     }
 
     /**

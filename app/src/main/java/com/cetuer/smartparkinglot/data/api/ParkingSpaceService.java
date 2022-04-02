@@ -19,6 +19,6 @@ public interface ParkingSpaceService {
      * @param parkingLotId 停车场编号
      * @return 停车位列表
      */
-    @GET("parkingSpace/listByParkingId/{parkingLotId}")
+    @GET("parking-app/parkingSpace/listByParkingId/{parkingLotId}")
     Call<ResultData<List<ParkingSpace>>> listByParkingId(@Path("parkingLotId") Integer parkingLotId);
 }

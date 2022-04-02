@@ -12,8 +12,8 @@ import java.util.List;
  * 停车场请求
  */
 public class ParkingLotRequest implements BaseRequest {
-    private MutableLiveData<List<ParkingLot>> parkingLotList = new MutableLiveData<>();
-    private MutableLiveData<Integer> parkingLotId = new MutableLiveData<>();
+    private final MutableLiveData<List<ParkingLot>> parkingLotList = new MutableLiveData<>();
+    private final MutableLiveData<Integer> parkingLotId = new MutableLiveData<>();
 
     /**
      * 请求获得停车场列表

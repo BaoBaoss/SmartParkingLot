@@ -22,7 +22,7 @@ public interface BeaconService {
      * @param parkingLotId 停车场编号
      * @return 信标设备信息
      */
-    @GET("beacon/listByParkingLotId/{parkingLotId}")
+    @GET("parking-app/beacon/listByParkingLotId/{parkingLotId}")
     Call<ResultData<List<BeaconDevice>>> listByParkingLotId(@Path("parkingLotId") Integer parkingLotId);
 
     /**
@@ -30,7 +30,7 @@ public interface BeaconService {
      *
      * @return 信标终点信息
      */
-    @GET("beacon/endPointByParkingLotId/{parkingLotId}")
+    @GET("parking-app/beacon/endPointByParkingLotId/{parkingLotId}")
     Call<ResultData<BeaconPoint>> endPointByParkingLotId(@Path("parkingLotId") Integer parkingLotId);
 
 }
