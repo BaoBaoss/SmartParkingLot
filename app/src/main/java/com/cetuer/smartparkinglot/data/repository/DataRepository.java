@@ -11,6 +11,7 @@ import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.data.bean.MemberLogin;
 import com.cetuer.smartparkinglot.data.bean.ParkingLot;
 import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
+import com.cetuer.smartparkinglot.data.interceptor.TokenHeaderInterceptor;
 import com.cetuer.smartparkinglot.data.response.ResultData;
 import com.cetuer.smartparkinglot.data.response.callback.BaseCallBack;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
@@ -31,7 +32,7 @@ public class DataRepository {
     /**
      * 接口地址
      */
-    private static final String BASE_URL = "http://192.168.0.106:9089/";
+    private static final String BASE_URL = "http://192.168.0.107:9089/";
     /**
      * 超时时间10秒
      */
@@ -50,6 +51,7 @@ public class DataRepository {
                     .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                     .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                     .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .addNetworkInterceptor(new TokenHeaderInterceptor())
                     .build())
             .addConverterFactory(GsonConverterFactory.create())
             .build();

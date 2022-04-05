@@ -32,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 
 

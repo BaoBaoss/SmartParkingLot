@@ -61,6 +61,12 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
             startActivity(intent);
         });
         mBinding.register.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+        //有token直接进主页
+        if(!SPUtils.getInstance().getString("token").isEmpty()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
 }

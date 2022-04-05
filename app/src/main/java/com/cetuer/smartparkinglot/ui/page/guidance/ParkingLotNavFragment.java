@@ -23,7 +23,7 @@ import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
-import com.cetuer.smartparkinglot.utils.KLog;
+import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.permissionx.guolindev.PermissionX;
 
 import java.util.ArrayList;
@@ -81,6 +81,10 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
         });
         //获得终点坐标后获得停车位
         mEvent.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
+            if(beaconPoint.getX() == 0 || beaconPoint.getY() == 0) {
+                ToastUtils.showShortToast(this.mActivity, "此停车场没有信标");
+                return;
+            }
             endPoint = beaconPoint;
             mEvent.parkingSpaceRequest.requestParkingSpace(parkingId);
         });
@@ -107,7 +111,6 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
             lastLocationPoint = point;
             lastLocationColor = ((ColorDrawable) coordinate.get(point.getX()).get(point.getY()).getBackground()).getColor();
             coordinate.get(point.getX()).get(point.getY()).setBackgroundColor(Color.BLUE);
-            KLog.e(this.navState);
             //如果正在导航，并且当前位置与选中的车位坐标一致则停车成功
             if(this.navState == 1 && point.getX().equals(spacePoint.getX()) && point.getY().equals(spacePoint.getY())) {
                 //发送请求
@@ -118,6 +121,27 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
                 this.navState = 2;
             }
         });
+//        mBinding.back.setOnClickListener(v -> NavHostFragment.findNavController(ParkingLotNavFragment.this).popBackStack());
+    }
+
+    @Override
+    public void onDestroyView() {
+        mOpenBluetooth = false;
+        mOpenGps = false;
+        parkingId = null;
+        endPoint = null;
+        parkingSpaces = null;
+        coordinate = null;
+        lastLocationPoint = null;
+        lastLocationColor = null;
+        spacePoint = null;
+        navState = 0;
+        mEvent.parkingLotRequest.getParkingLotId().removeObservers(getViewLifecycleOwner());
+        mEvent.beaconRequest.getEndPoint().removeObservers(getViewLifecycleOwner());
+        mEvent.parkingSpaceRequest.getParkingSpaceList().removeObservers(getViewLifecycleOwner());
+        mEvent.list.removeObservers(getViewLifecycleOwner());
+        mEvent.fingerprintRequest.getLocationPoint().removeObservers(getViewLifecycleOwner());
+        super.onDestroyView();
     }
 
     /**

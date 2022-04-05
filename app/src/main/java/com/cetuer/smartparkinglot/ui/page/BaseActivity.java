@@ -27,8 +27,8 @@ import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.data.response.manager.NetworkStateManager;
+import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 
 /**
  * Create by KunMinX at 19/8/1

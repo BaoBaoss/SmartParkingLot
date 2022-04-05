@@ -2,17 +2,12 @@ package com.cetuer.smartparkinglot.ui.page.main;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.cetuer.smartparkinglot.App;
@@ -25,20 +20,17 @@ import com.cetuer.smartparkinglot.databinding.ActivityMainBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.adapter.FragmentViewPagerAdapter;
+import com.cetuer.smartparkinglot.ui.page.BaseActivity;
+import com.cetuer.smartparkinglot.ui.page.carport_query.CarportQueryFragment;
 import com.cetuer.smartparkinglot.ui.page.find_car.FindCarFragment;
 import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceContainerFragment;
-import com.cetuer.smartparkinglot.ui.page.guidance.GuidanceFragment;
-import com.cetuer.smartparkinglot.ui.page.carport_query.CarportQueryFragment;
-import com.cetuer.smartparkinglot.ui.page.BaseActivity;
 import com.cetuer.smartparkinglot.ui.page.mine.MineFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
 import com.cetuer.smartparkinglot.utils.GpsUtils;
-import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.permissionx.guolindev.PermissionX;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -152,7 +144,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - mExitTime < 2000) {
-            super.onBackPressed();
+            finish();
         } else {
             mExitTime = System.currentTimeMillis();
             ToastUtils.showShortToast(this, "再按一次退出应用");

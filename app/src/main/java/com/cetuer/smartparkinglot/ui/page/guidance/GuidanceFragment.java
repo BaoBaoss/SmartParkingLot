@@ -131,12 +131,14 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
             void onPause() {
                 mBinding.map.onPause();
             }
-
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            void onDestroy() {
-                mBinding.map.onDestroy();
-            }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        mBinding.map.onDestroy();
+        firstLocation = true;
+        super.onDestroyView();
     }
 
     private MaterialDialog dialog;
