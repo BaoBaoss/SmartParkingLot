@@ -51,10 +51,12 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                 ToastUtils.showShortToast(LoginActivity.this, "密码长度在5-20之间");
                 return;
             }
+            mBinding.login.setEnabled(false);
             mEvent.memberRequest.requestLogin(new MemberLogin(username, password));
         });
         //登录完成，将token保存到SharedPreferences后跳转到主界面
         mEvent.memberRequest.getToken().observe(this, s -> {
+            mBinding.login.setEnabled(true);
             SPUtils.getInstance().put("token", s);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
