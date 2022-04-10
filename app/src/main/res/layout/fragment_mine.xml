@@ -10,24 +10,298 @@
             type="com.cetuer.smartparkinglot.ui.page.mine.MineViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#eaeaea"
         tools:context=".ui.page.mine.MineFragment">
 
-        <TextView
-            android:id="@+id/text_hom2e"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="@{vm.text}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/h_back"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp" />
+
+                    <ImageView
+                        android:id="@+id/gender"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/gender_male" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/h_back"
+                    android:layout_marginBottom="20dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={vm.nickname}"
+                            android:textColor="@color/white"
+                            android:textSize="17sp" />
+
+                        <ImageView
+                            android:layout_width="1dp"
+                            android:layout_height="25dp"
+                            android:layout_marginHorizontal="15dp"
+                            android:background="@color/white" />
+
+                        <TextView
+                            android:id="@+id/phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={vm.phone}"
+                            android:textColor="@color/white"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/editInfo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_me" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="修改个人资料"
+                    android:textColor="#000" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/carHistory"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_car_history" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="停车历史记录"
+                    android:textColor="#000" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/kefu"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_kefu" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="客服中心"
+                    android:textColor="#000" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/aboutUs"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_about_us" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="关于我们"
+                    android:textColor="#000" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/resetPwd"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_password" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="修改密码"
+                    android:textColor="#000" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_setting" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="设置"
+                    android:textColor="#000" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="30dp"
+                android:text="退出登录"
+                android:textColor="#fff"
+                android:layout_gravity="center"
+                android:background="#5866dd" />
+        </LinearLayout>
+    </ScrollView>
 </layout>

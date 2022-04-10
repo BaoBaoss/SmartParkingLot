@@ -1,19 +1,17 @@
 package com.cetuer.smartparkinglot.ui.page.mine;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 public class MineViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    /**
+     * 昵称
+     */
+    public ObservableField<String> nickname = new ObservableField<>("暂无");
 
-    public MineViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is mine fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
+    /**
+     * 手机号
+     */
+    public ObservableField<String> phone = new ObservableField<>("暂无");
 }

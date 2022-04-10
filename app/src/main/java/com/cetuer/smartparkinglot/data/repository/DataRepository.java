@@ -1,5 +1,6 @@
 package com.cetuer.smartparkinglot.data.repository;
 
+import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.data.api.BeaconService;
 import com.cetuer.smartparkinglot.data.api.FingerprintService;
 import com.cetuer.smartparkinglot.data.api.MemberService;
@@ -8,12 +9,14 @@ import com.cetuer.smartparkinglot.data.api.ParkingSpaceService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
+import com.cetuer.smartparkinglot.data.bean.Member;
 import com.cetuer.smartparkinglot.data.bean.MemberLogin;
 import com.cetuer.smartparkinglot.data.bean.ParkingLot;
 import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
 import com.cetuer.smartparkinglot.data.interceptor.TokenHeaderInterceptor;
 import com.cetuer.smartparkinglot.data.response.ResultData;
 import com.cetuer.smartparkinglot.data.response.callback.BaseCallBack;
+import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
 
 import java.util.List;
@@ -37,6 +40,8 @@ public class DataRepository {
      * 超时时间10秒
      */
     private static final int DEFAULT_TIMEOUT = 10;
+
+    private SharedViewModel mEvent = App.getInstance().getApplicationScopeViewModel(SharedViewModel.class);
     /**
      * 单例
      */
@@ -73,10 +78,30 @@ public class DataRepository {
             @Override
             public void onSuccessful(String data) {
                 result.onResult(data);
+                mEvent.beLogin.setValue(false);
+            }
+
+            @Override
+            protected void onFail(Integer code, Throwable t) {
+                super.onFail(code, t);
+                mEvent.beLogin.setValue(false);
             }
         });
     }
-    
+
+    /**
+     * 登出
+     * @param result 回调
+     */
+    public void logout(ResultData.Result<Void> result) {
+        retrofit.create(MemberService.class).logout().enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
+    }
+
     /**
      * 注册
      * @param result 回调
@@ -191,5 +216,64 @@ public class DataRepository {
      */
     public void changeSpaceStatus(ResultData.Result<Void> result, Integer parkingId, Integer x, Integer y, Integer status) {
         DialogUtils.showLoadingDialog();
+    }
+
+    /**
+     * 获取当前用户信息
+     * @param result 回调
+     */
+    public void getMemberInfo(ResultData.Result<Member> result) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(MemberService.class).getInfo().enqueue(new BaseCallBack<Member>() {
+            @Override
+            public void onSuccessful(Member data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 修改密码
+     * @param pwd 新密码
+     * @param result 回调
+     */
+    public void resetPwd(ResultData.Result<Void> result, String pwd) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(MemberService.class).resetPwd(pwd).enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 检查密码是否匹配
+     * @param pwd 密码
+     * @param result 回调
+     */
+    public void checkPwd(ResultData.Result<Boolean> result, String pwd) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(MemberService.class).checkPwd(pwd).enqueue(new BaseCallBack<Boolean>() {
+            @Override
+            public void onSuccessful(Boolean data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 更新用户信息
+     * @param member 用户信息
+     * @param result 回调
+     */
+    public void updateMember(ResultData.Result<Void> result, Member member) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(MemberService.class).updateMember(member).enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
     }
 }

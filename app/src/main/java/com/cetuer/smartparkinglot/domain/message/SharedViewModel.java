@@ -57,4 +57,8 @@ public class SharedViewModel extends ViewModel {
      */
     public final MutableLiveData<List<String>> filterMacs = new MutableLiveData<>();
 
+    /**
+     * 是否正在登录
+     */
+    public final MutableLiveData<Boolean> beLogin = new MutableLiveData<>();
 }

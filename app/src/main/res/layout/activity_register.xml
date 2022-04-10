@@ -76,7 +76,8 @@
                         android:padding="15dp"
                         android:text="@={vm.username}"
                         android:singleLine="true"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -99,7 +100,8 @@
                         android:padding="15dp"
                         android:singleLine="true"
                         android:text="@={vm.password}"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -122,7 +124,8 @@
                         android:padding="15dp"
                         android:singleLine="true"
                         android:text="@={vm.againPassword}"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
                 </androidx.cardview.widget.CardView>
 
                 <!--嵌套线性布局-->
