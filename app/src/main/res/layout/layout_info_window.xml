@@ -30,7 +30,7 @@
             tools:ignore="SmallSp" />
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="10dp">
         <TextView
@@ -43,5 +43,29 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#e7be67"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:id="@+id/iv_notice"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_notice" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="公告"
+            android:textColor="#fff"
+            android:textSize="13sp"
+            android:layout_below="@id/iv_notice"
+            android:layout_centerHorizontal="true"
+            tools:ignore="SmallSp" />
     </RelativeLayout>
 </LinearLayout>

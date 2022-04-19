@@ -121,7 +121,6 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
                 this.navState = 2;
             }
         });
-//        mBinding.back.setOnClickListener(v -> NavHostFragment.findNavController(ParkingLotNavFragment.this).popBackStack());
     }
 
     @Override

@@ -71,6 +71,34 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
                         .title(parkingLot.getName()));
             }
         });
+        //根据经纬度获取停车场后再去获取公告
+        mEvent.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingId -> {
+            //获取公告
+            mEvent.noticeRequest.requestNoticeByParking(parkingId);
+        });
+        //获取到公告则进行弹窗
+        mEvent.noticeRequest.getNoticeList().observe(getViewLifecycleOwner(), notices -> {
+            if (notices == null || notices.size() == 0) {
+                DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "此停车场暂无公告").show();
+            } else {
+                StringBuffer sb = new StringBuffer();
+                notices.forEach(item -> {
+                    sb.setLength(0);
+                    switch (item.getLevel()) {
+                        case 1:
+                            sb.append("紧急公告");
+                            break;
+                        case 2:
+                            sb.append("特急公告");
+                            break;
+                        default:
+                            sb.append("公告");
+                            break;
+                    }
+                    DialogUtils.showBasicDialogNoCancel(this.mActivity, sb.toString(), item.getContent()).show();
+                });
+            }
+        });
     }
 
     public void initMap() {
@@ -106,8 +134,17 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
                 TextView title = view.findViewById(R.id.title);
                 title.setText(marker.getTitle());
                 RelativeLayout nav = view.findViewById(R.id.navigation);
+                RelativeLayout notice = view.findViewById(R.id.notice);
                 //调起导航
-                nav.setOnClickListener(v -> startAMapNavi(marker));
+                nav.setOnClickListener(v -> {
+                    startAMapNavi(marker);
+                    marker.hideInfoWindow();
+                });
+                //点击公告根据经纬度请求停车场
+                notice.setOnClickListener(v -> {
+                    mEvent.parkingLotRequest.requestParkingIdByLatLng(marker.getPosition().longitude, marker.getPosition().latitude);
+                    marker.hideInfoWindow();
+                });
                 return view;
             }
         });

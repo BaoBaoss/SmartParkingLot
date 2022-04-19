@@ -4,6 +4,7 @@ import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.data.api.BeaconService;
 import com.cetuer.smartparkinglot.data.api.FingerprintService;
 import com.cetuer.smartparkinglot.data.api.MemberService;
+import com.cetuer.smartparkinglot.data.api.NoticeService;
 import com.cetuer.smartparkinglot.data.api.ParkingLotService;
 import com.cetuer.smartparkinglot.data.api.ParkingSpaceService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
@@ -11,6 +12,7 @@ import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.data.bean.Member;
 import com.cetuer.smartparkinglot.data.bean.MemberLogin;
+import com.cetuer.smartparkinglot.data.bean.Notice;
 import com.cetuer.smartparkinglot.data.bean.ParkingLot;
 import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
 import com.cetuer.smartparkinglot.data.interceptor.TokenHeaderInterceptor;
@@ -272,6 +274,21 @@ public class DataRepository {
         retrofit.create(MemberService.class).updateMember(member).enqueue(new BaseCallBack<Void>() {
             @Override
             public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 根据停车场获取公告
+     * @param parkingId 停车场编号
+     * @param result 回调
+     */
+    public void listNoticeByParking(ResultData.Result<List<Notice>> result, Integer parkingId) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(NoticeService.class).listByParking(parkingId).enqueue(new BaseCallBack<List<Notice>>() {
+            @Override
+            public void onSuccessful(List<Notice> data) {
                 result.onResult(data);
             }
         });

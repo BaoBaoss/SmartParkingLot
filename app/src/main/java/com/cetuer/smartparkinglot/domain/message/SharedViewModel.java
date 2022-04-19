@@ -7,6 +7,7 @@ import com.cetuer.smartparkinglot.bluetooth.BleDevice;
 import com.cetuer.smartparkinglot.data.request.BeaconRequest;
 import com.cetuer.smartparkinglot.data.request.FingerprintRequest;
 import com.cetuer.smartparkinglot.data.request.MemberRequest;
+import com.cetuer.smartparkinglot.data.request.NoticeRequest;
 import com.cetuer.smartparkinglot.data.request.ParkingLotRequest;
 import com.cetuer.smartparkinglot.data.request.ParkingSpaceRequest;
 
@@ -37,6 +38,10 @@ public class SharedViewModel extends ViewModel {
      * 停车位请求
      */
     public final ParkingSpaceRequest parkingSpaceRequest = new ParkingSpaceRequest();
+    /**
+     * 公告请求
+     */
+    public final NoticeRequest noticeRequest = new NoticeRequest();
     /**
      * 是否打开蓝牙
      */

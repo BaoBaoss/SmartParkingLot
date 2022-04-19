@@ -36,12 +36,5 @@
                     android:orientation="vertical" />
             </HorizontalScrollView>
         </ScrollView>
-<!--        <Button-->
-<!--            android:id="@+id/back"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:text="返回"/>-->
     </RelativeLayout>
 </layout>
