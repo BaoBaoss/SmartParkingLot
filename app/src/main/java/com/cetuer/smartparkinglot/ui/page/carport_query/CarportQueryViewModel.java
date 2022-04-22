@@ -1,19 +1,13 @@
 package com.cetuer.smartparkinglot.ui.page.carport_query;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cetuer.smartparkinglot.data.bean.ParkingLot;
+
+import java.util.List;
+
 public class CarportQueryViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-
-    public CarportQueryViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
+    public MutableLiveData<List<ParkingLot>> parkingLotList = new MutableLiveData<>();
 }

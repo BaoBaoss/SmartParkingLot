@@ -8,26 +8,53 @@
         <variable
             name="vm"
             type="com.cetuer.smartparkinglot.ui.page.carport_query.CarportQueryViewModel" />
+        <variable
+            name="adapter"
+            type="com.cetuer.smartparkinglot.ui.adapter.CarportQueryAdapter" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.page.carport_query.CarportQueryFragment">
-
-        <TextView
-            android:id="@+id/text_notifications"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@{vm.text}"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@color/purple_700"
+            android:padding="15dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:background="@drawable/search_shape">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_search"/>
+                <EditText
+                    android:id="@+id/edit_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="请输入停车场名称"/>
+                <Button
+                    android:id="@+id/btn_search"
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:text="搜索"
+                    android:textColor="#fff"
+                    android:background="@drawable/btn_search_shape"/>
+            </LinearLayout>
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:adapter="@{adapter}"
+            app:submitList="@{vm.parkingLotList}"
+            android:paddingTop="20dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    </LinearLayout>
 </layout>

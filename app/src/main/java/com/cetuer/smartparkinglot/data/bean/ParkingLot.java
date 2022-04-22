@@ -33,9 +33,9 @@ public class ParkingLot {
     private Integer carportCount;
 
     /**
-     * 停车数
+     * 空余车位
      */
-    private Integer parkingCount;
+    private Integer emptyParking;
 
     /**
      * 收费标准  元/小时
@@ -82,12 +82,12 @@ public class ParkingLot {
         this.carportCount = carportCount;
     }
 
-    public Integer getParkingCount() {
-        return parkingCount;
+    public Integer getEmptyParking() {
+        return emptyParking;
     }
 
-    public void setParkingCount(Integer parkingCount) {
-        this.parkingCount = parkingCount;
+    public void setEmptyParking(Integer emptyParking) {
+        this.emptyParking = emptyParking;
     }
 
     public Double getPriceStandard() {
