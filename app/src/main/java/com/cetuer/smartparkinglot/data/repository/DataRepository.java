@@ -37,7 +37,7 @@ public class DataRepository {
     /**
      * 接口地址
      */
-    private static final String BASE_URL = "http://192.168.0.101:9089/";
+    private static final String BASE_URL = "http://app.cetuer.com/";
     /**
      * 超时时间10秒
      */
