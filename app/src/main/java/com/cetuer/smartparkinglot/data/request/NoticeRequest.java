@@ -1,9 +1,9 @@
 package com.cetuer.smartparkinglot.data.request;
 
-import androidx.lifecycle.MutableLiveData;
 
 import com.cetuer.smartparkinglot.data.bean.Notice;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
+import com.kunminx.architecture.ui.callback.UnPeekLiveData;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * 停车场请求
  */
 public class NoticeRequest implements BaseRequest {
-    private final MutableLiveData<List<Notice>> noticeList = new MutableLiveData<>();
+    private final UnPeekLiveData<List<Notice>> noticeList = new UnPeekLiveData<>();
 
     /**
      * 根据停车场请求获得公告列表
@@ -21,7 +21,7 @@ public class NoticeRequest implements BaseRequest {
         DataRepository.getInstance().listNoticeByParking(noticeList::postValue, parkingId);
     }
 
-    public MutableLiveData<List<Notice>> getNoticeList() {
+    public UnPeekLiveData<List<Notice>> getNoticeList() {
         return noticeList;
     }
 }

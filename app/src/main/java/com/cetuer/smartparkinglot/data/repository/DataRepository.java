@@ -2,6 +2,7 @@ package com.cetuer.smartparkinglot.data.repository;
 
 import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.data.api.BeaconService;
+import com.cetuer.smartparkinglot.data.api.CarService;
 import com.cetuer.smartparkinglot.data.api.FingerprintService;
 import com.cetuer.smartparkinglot.data.api.MemberService;
 import com.cetuer.smartparkinglot.data.api.NoticeService;
@@ -10,6 +11,7 @@ import com.cetuer.smartparkinglot.data.api.ParkingSpaceService;
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
+import com.cetuer.smartparkinglot.data.bean.Car;
 import com.cetuer.smartparkinglot.data.bean.Member;
 import com.cetuer.smartparkinglot.data.bean.MemberLogin;
 import com.cetuer.smartparkinglot.data.bean.Notice;
@@ -72,7 +74,8 @@ public class DataRepository {
 
     /**
      * 登录
-     * @param result 回调
+     *
+     * @param result      回调
      * @param memberLogin 登录信息
      */
     public void login(ResultData.Result<String> result, MemberLogin memberLogin) {
@@ -93,6 +96,7 @@ public class DataRepository {
 
     /**
      * 登出
+     *
      * @param result 回调
      */
     public void logout(ResultData.Result<Void> result) {
@@ -106,7 +110,8 @@ public class DataRepository {
 
     /**
      * 注册
-     * @param result 回调
+     *
+     * @param result     回调
      * @param memberInfo 会员信息
      */
     public void register(ResultData.Result<Void> result, MemberLogin memberInfo) {
@@ -121,7 +126,8 @@ public class DataRepository {
 
     /**
      * 网络请求终点坐标
-     * @param result 回调
+     *
+     * @param result       回调
      * @param parkingLotId 停车场编号
      */
     public void endPointByParkingLotId(ResultData.Result<BeaconPoint> result, Integer parkingLotId) {
@@ -136,7 +142,8 @@ public class DataRepository {
 
     /**
      * 网络请求信标信息
-     * @param result 回调
+     *
+     * @param result       回调
      * @param parkingLotId 停车场编号
      */
     public void listBeacon(ResultData.Result<List<BeaconDevice>> result, Integer parkingLotId) {
@@ -151,8 +158,9 @@ public class DataRepository {
 
     /**
      * 定位
+     *
      * @param result 回调
-     * @param RSSIs 信标强度列表
+     * @param RSSIs  信标强度列表
      */
     public void location(ResultData.Result<BeaconPoint> result, List<BeaconRssi> RSSIs) {
         retrofit.create(FingerprintService.class).location(RSSIs).enqueue(new BaseCallBack<BeaconPoint>() {
@@ -165,6 +173,7 @@ public class DataRepository {
 
     /**
      * 停车场列表
+     *
      * @param result 回调
      */
     public void parkingLotList(ResultData.Result<List<ParkingLot>> result) {
@@ -179,9 +188,10 @@ public class DataRepository {
 
     /**
      * 根据经纬度查询停车场id
-     * @param result 返回值
+     *
+     * @param result    返回值
      * @param longitude 经度
-     * @param latitude 纬度
+     * @param latitude  纬度
      */
     public void parkingIdByLatLng(ResultData.Result<Integer> result, Double longitude, Double latitude) {
         DialogUtils.showLoadingDialog();
@@ -195,7 +205,8 @@ public class DataRepository {
 
     /**
      * 根据停车场编号获得其车位列表
-     * @param result 回调
+     *
+     * @param result       回调
      * @param parkingLotId 停车场编号
      */
     public void parkingSpaceByParkingId(ResultData.Result<List<ParkingSpace>> result, Integer parkingLotId) {
@@ -210,11 +221,12 @@ public class DataRepository {
 
     /**
      * 改变车位状态
-     * @param result 回调
+     *
+     * @param result    回调
      * @param parkingId 停车场编号
-     * @param x x坐标
-     * @param y y坐标
-     * @param status 状态
+     * @param x         x坐标
+     * @param y         y坐标
+     * @param status    状态
      */
     public void changeSpaceStatus(ResultData.Result<Void> result, Integer parkingId, Integer x, Integer y, Integer status) {
         DialogUtils.showLoadingDialog();
@@ -222,6 +234,7 @@ public class DataRepository {
 
     /**
      * 获取当前用户信息
+     *
      * @param result 回调
      */
     public void getMemberInfo(ResultData.Result<Member> result) {
@@ -236,7 +249,8 @@ public class DataRepository {
 
     /**
      * 修改密码
-     * @param pwd 新密码
+     *
+     * @param pwd    新密码
      * @param result 回调
      */
     public void resetPwd(ResultData.Result<Void> result, String pwd) {
@@ -251,7 +265,8 @@ public class DataRepository {
 
     /**
      * 检查密码是否匹配
-     * @param pwd 密码
+     *
+     * @param pwd    密码
      * @param result 回调
      */
     public void checkPwd(ResultData.Result<Boolean> result, String pwd) {
@@ -266,6 +281,7 @@ public class DataRepository {
 
     /**
      * 更新用户信息
+     *
      * @param member 用户信息
      * @param result 回调
      */
@@ -281,14 +297,90 @@ public class DataRepository {
 
     /**
      * 根据停车场获取公告
+     *
      * @param parkingId 停车场编号
-     * @param result 回调
+     * @param result    回调
      */
     public void listNoticeByParking(ResultData.Result<List<Notice>> result, Integer parkingId) {
         DialogUtils.showLoadingDialog();
         retrofit.create(NoticeService.class).listByParking(parkingId).enqueue(new BaseCallBack<List<Notice>>() {
             @Override
             public void onSuccessful(List<Notice> data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 获取车辆信息
+     */
+    public void getCarInfo(ResultData.Result<Car> result) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(CarService.class).getInfo().enqueue(new BaseCallBack<Car>() {
+            @Override
+            public void onSuccessful(Car data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 新增或修改车辆信息
+     *
+     * @param car    车辆信息
+     * @param result 回调
+     */
+    public void addOrEditCar(ResultData.Result<Void> result, Car car) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(CarService.class).addOrEditCar(car).enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 停车
+     *
+     * @param result 回调
+     * @param spaceId 车位编号
+     */
+    public void parking(ResultData.Result<Void> result, Integer spaceId) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(ParkingSpaceService.class).parking(spaceId).enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 是否可以停车
+     *
+     * @param result 回调
+     */
+    public void canParking(ResultData.Result<Boolean> result) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(CarService.class).canParking().enqueue(new BaseCallBack<Boolean>() {
+            @Override
+            public void onSuccessful(Boolean data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
+     * 是否可以寻车
+     *
+     * @param result 回调
+     */
+    public void canFindCar(ResultData.Result<Boolean> result) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(CarService.class).canFindCar().enqueue(new BaseCallBack<Boolean>() {
+            @Override
+            public void onSuccessful(Boolean data) {
                 result.onResult(data);
             }
         });

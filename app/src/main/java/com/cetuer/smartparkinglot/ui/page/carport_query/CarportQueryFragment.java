@@ -42,8 +42,8 @@ public class CarportQueryFragment extends BaseFragment<FragmentCarportQueryBindi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //获得所有停车场信息
-        mEvent.parkingLotRequest.requestList();
-        mEvent.parkingLotRequest.getParkingLotList().observe(getViewLifecycleOwner(), parkingLots -> {
+        mState.parkingLotRequest.requestList();
+        mState.parkingLotRequest.getParkingLotList().observe(getViewLifecycleOwner(), parkingLots -> {
             if (parkingLots == null) {
                 return;
             }
@@ -61,7 +61,7 @@ public class CarportQueryFragment extends BaseFragment<FragmentCarportQueryBindi
             //搜索条件
             searchParkingName = mBinding.editSearch.getText().toString();
             //发起查询所有停车场请求
-            mEvent.parkingLotRequest.requestList();
+            mState.parkingLotRequest.requestList();
         });
     }
 }

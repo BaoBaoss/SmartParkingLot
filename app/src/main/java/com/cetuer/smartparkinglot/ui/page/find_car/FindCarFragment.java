@@ -5,22 +5,15 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 
 import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.BR;
 import com.cetuer.smartparkinglot.R;
-import com.cetuer.smartparkinglot.bluetooth.BleDevice;
-import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.databinding.FragmentFindCarBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
-import com.cetuer.smartparkinglot.utils.KLog;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.cetuer.smartparkinglot.utils.DialogUtils;
 
 public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
 
@@ -42,8 +35,12 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mState.getText().observe(getViewLifecycleOwner(), s -> {
-
+        //是否可寻车
+        mState.carRequest.canFindCar();
+        mState.carRequest.getCanFindCar().observe(this.mActivity, canFindCar -> {
+            if(!canFindCar) {
+                DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "无法寻车，没有车或者未停车").show();
+            }
         });
     }
 }

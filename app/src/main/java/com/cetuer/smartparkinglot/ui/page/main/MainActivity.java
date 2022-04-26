@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             BleManager.getInstance().refreshScanner();
             BleManager.getInstance().scanByFilter(macs);
         });
-        mEvent.beaconRequest.getBeaconLiveData().observe(this, beaconDevices -> mEvent.filterMacs.postValue(beaconDevices.stream().map(BeaconDevice::getMac).collect(Collectors.toList())));
+        mState.beaconRequest.getBeaconLiveData().observe(this, beaconDevices -> mEvent.filterMacs.postValue(beaconDevices.stream().map(BeaconDevice::getMac).collect(Collectors.toList())));
         //扫描到的蓝牙放进列表
         BleManager.getInstance().getScanDeviceEvent().observe(this, bleDevices -> mEvent.list.setValue(bleDevices));
         //注册广播

@@ -1,10 +1,9 @@
 package com.cetuer.smartparkinglot.data.request;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.cetuer.smartparkinglot.data.bean.Member;
 import com.cetuer.smartparkinglot.data.bean.MemberLogin;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
+import com.kunminx.architecture.ui.callback.UnPeekLiveData;
 
 /**
  * Created by Cetuer on 2022/3/6 21:49.
@@ -15,37 +14,37 @@ public class MemberRequest implements BaseRequest {
     /**
      * 注册结果
      */
-    private final MutableLiveData<Void> registerRes = new MutableLiveData<>();
+    private final UnPeekLiveData<Void> registerRes = new UnPeekLiveData<>();
 
     /**
      * token
      */
-    private final MutableLiveData<String> token = new MutableLiveData<>();
+    private final UnPeekLiveData<String> token = new UnPeekLiveData<>();
 
     /**
      * 用户信息
      */
-    private final MutableLiveData<Member> memberInfo = new MutableLiveData<>();
+    private final UnPeekLiveData<Member> memberInfo = new UnPeekLiveData<>();
 
     /**
      * 修改密码结果
      */
-    private final MutableLiveData<Void> resetPwd = new MutableLiveData<>();
+    private final UnPeekLiveData<Void> resetPwd = new UnPeekLiveData<>();
 
     /**
      * 密码是否匹配
      */
-    private final MutableLiveData<Boolean> isMatchPwd = new MutableLiveData<>();
+    private final UnPeekLiveData<Boolean> isMatchPwd = new UnPeekLiveData<>();
 
     /**
      * 修改个人信息结果
      */
-    private final MutableLiveData<Void> userInfo = new MutableLiveData<>();
+    private final UnPeekLiveData<Void> userInfo = new UnPeekLiveData<>();
 
     /**
      * 登出
      */
-    private final MutableLiveData<Void> logout = new MutableLiveData<>();
+    private final UnPeekLiveData<Void> logout = new UnPeekLiveData<>();
 
     /**
      * 请求注册
@@ -97,31 +96,31 @@ public class MemberRequest implements BaseRequest {
         DataRepository.getInstance().updateMember(userInfo::postValue, member);
     }
 
-    public MutableLiveData<Void> getRegisterRes() {
+    public UnPeekLiveData<Void> getRegisterRes() {
         return registerRes;
     }
 
-    public MutableLiveData<String> getToken() {
+    public UnPeekLiveData<String> getToken() {
         return token;
     }
 
-    public MutableLiveData<Member> getMemberInfo() {
+    public UnPeekLiveData<Member> getMemberInfo() {
         return memberInfo;
     }
 
-    public MutableLiveData<Void> getResetPwd() {
+    public UnPeekLiveData<Void> getResetPwd() {
         return resetPwd;
     }
 
-    public MutableLiveData<Boolean> getIsMatchPwd() {
+    public UnPeekLiveData<Boolean> getIsMatchPwd() {
         return isMatchPwd;
     }
 
-    public MutableLiveData<Void> getLogout() {
+    public UnPeekLiveData<Void> getLogout() {
         return logout;
     }
 
-    public MutableLiveData<Void> getUserInfo() {
+    public UnPeekLiveData<Void> getUserInfo() {
         return userInfo;
     }
 }

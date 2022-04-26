@@ -21,4 +21,12 @@ public interface ParkingSpaceService {
      */
     @GET("parking-app/parkingSpace/listByParkingId/{parkingLotId}")
     Call<ResultData<List<ParkingSpace>>> listByParkingId(@Path("parkingLotId") Integer parkingLotId);
+
+    /**
+     * 停车
+     * @param spaceId 车位id
+     * @return 无
+     */
+    @GET("parking-app/parkingSpace/parking")
+    Call<ResultData<Void>> parking(Integer spaceId);
 }

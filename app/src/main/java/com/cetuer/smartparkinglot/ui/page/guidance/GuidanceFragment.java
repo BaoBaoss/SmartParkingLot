@@ -45,6 +45,8 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
     private AMap mAMap;
     //是否为首次定位
     private boolean firstLocation = true;
+    //需要导航的maker
+    private Marker marker;
 
     @Override
     protected void initViewModel() {
@@ -63,8 +65,8 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
         mBinding.map.onCreate(savedInstanceState);
         initMap();
         addLifecycleListener();
-        mEvent.parkingLotRequest.requestList();
-        mEvent.parkingLotRequest.getParkingLotList().observe(getViewLifecycleOwner(), parkingLots -> {
+        mState.parkingLotRequest.requestList();
+        mState.parkingLotRequest.getParkingLotList().observe(getViewLifecycleOwner(), parkingLots -> {
             for (ParkingLot parkingLot : parkingLots) {
                 mAMap.addMarker(new MarkerOptions().
                         position(new LatLng(parkingLot.getLatitude(), parkingLot.getLongitude()))
@@ -72,12 +74,12 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
             }
         });
         //根据经纬度获取停车场后再去获取公告
-        mEvent.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingId -> {
+        mState.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingId -> {
             //获取公告
-            mEvent.noticeRequest.requestNoticeByParking(parkingId);
+            mState.noticeRequest.requestNoticeByParking(parkingId);
         });
         //获取到公告则进行弹窗
-        mEvent.noticeRequest.getNoticeList().observe(getViewLifecycleOwner(), notices -> {
+        mState.noticeRequest.getNoticeList().observe(getViewLifecycleOwner(), notices -> {
             if (notices == null || notices.size() == 0) {
                 DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "此停车场暂无公告").show();
             } else {
@@ -137,16 +139,27 @@ public class GuidanceFragment extends BaseFragment<FragmentGuidanceBinding> {
                 RelativeLayout notice = view.findViewById(R.id.notice);
                 //调起导航
                 nav.setOnClickListener(v -> {
-                    startAMapNavi(marker);
-                    marker.hideInfoWindow();
+                    GuidanceFragment.this.marker = marker;
+                    //判断是否可以停车
+                    mState.carRequest.canParking();
                 });
                 //点击公告根据经纬度请求停车场
                 notice.setOnClickListener(v -> {
-                    mEvent.parkingLotRequest.requestParkingIdByLatLng(marker.getPosition().longitude, marker.getPosition().latitude);
+                    mState.parkingLotRequest.requestParkingIdByLatLng(marker.getPosition().longitude, marker.getPosition().latitude);
                     marker.hideInfoWindow();
                 });
                 return view;
             }
+        });
+        //是否可停车
+        mState.carRequest.getCanParking().observe(getViewLifecycleOwner(), canParking -> {
+            marker.hideInfoWindow();
+            //可以停车
+            if (canParking) {
+                startAMapNavi(marker);
+                return;
+            }
+            DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "当前用户没有车或者已停车，无法停车！").show();
         });
         //点击标记回调
         mAMap.setOnMarkerClickListener(marker -> {

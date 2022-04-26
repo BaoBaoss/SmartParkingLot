@@ -53,10 +53,10 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
                 return;
             }
             //发送请求注册用户
-            mEvent.memberRequest.requestRegister(new MemberLogin(username, password));
+            mState.memberRequest.requestRegister(new MemberLogin(username, password));
         });
         //注册成功关闭当前页面
-        mEvent.memberRequest.getRegisterRes().observe(this, data -> {
+        mState.memberRequest.getRegisterRes().observe(this, data -> {
             ToastUtils.showLongToast(RegisterActivity.this, "注册成功");
             finish();
         });

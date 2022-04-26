@@ -52,12 +52,12 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                 return;
             }
             mEvent.beLogin.setValue(true);
-            mEvent.memberRequest.requestLogin(new MemberLogin(username, password));
+            mState.memberRequest.requestLogin(new MemberLogin(username, password));
         });
         //登录中则不可点击登录按钮
         mEvent.beLogin.observe(this, beLogin -> mBinding.login.setEnabled(!beLogin));
         //登录完成，将token保存到SharedPreferences后跳转到主界面
-        mEvent.memberRequest.getToken().observe(this, s -> {
+        mState.memberRequest.getToken().observe(this, s -> {
             SPUtils.getInstance().put("token", s);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 /**
  * Created by Cetuer on 2022/4/18 22:57.
- * TODO()
+ * 公告服务
  */
 public interface NoticeService {
     /**

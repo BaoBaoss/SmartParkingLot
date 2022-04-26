@@ -1,10 +1,9 @@
 package com.cetuer.smartparkinglot.data.request;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.cetuer.smartparkinglot.data.bean.BeaconDevice;
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
+import com.kunminx.architecture.ui.callback.UnPeekLiveData;
 
 import java.util.List;
 
@@ -14,9 +13,9 @@ import java.util.List;
  */
 public class BeaconRequest implements BaseRequest {
 
-    private final MutableLiveData<List<BeaconDevice>> beaconLiveData = new MutableLiveData<>();
+    private final UnPeekLiveData<List<BeaconDevice>> beaconLiveData = new UnPeekLiveData<>();
 
-    private final MutableLiveData<BeaconPoint> endPoint = new MutableLiveData<>();
+    private final UnPeekLiveData<BeaconPoint> endPoint = new UnPeekLiveData<>();
     /**
      * 请求信标列表
      */
@@ -31,11 +30,11 @@ public class BeaconRequest implements BaseRequest {
         DataRepository.getInstance().endPointByParkingLotId(endPoint::postValue, parkingLotId);
     }
 
-    public MutableLiveData<List<BeaconDevice>> getBeaconLiveData() {
+    public UnPeekLiveData<List<BeaconDevice>> getBeaconLiveData() {
         return beaconLiveData;
     }
 
-    public MutableLiveData<BeaconPoint> getEndPoint() {
+    public UnPeekLiveData<BeaconPoint> getEndPoint() {
         return endPoint;
     }
 }

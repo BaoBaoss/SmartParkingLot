@@ -1,10 +1,9 @@
 package com.cetuer.smartparkinglot.data.request;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.cetuer.smartparkinglot.data.bean.BeaconPoint;
 import com.cetuer.smartparkinglot.data.bean.BeaconRssi;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
+import com.kunminx.architecture.ui.callback.UnPeekLiveData;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class FingerprintRequest implements BaseRequest {
     /**
      * 定位坐标
      */
-    private final MutableLiveData<BeaconPoint> locationPoint =  new MutableLiveData<>();
+    private final UnPeekLiveData<BeaconPoint> locationPoint =  new UnPeekLiveData<>();
 
     /**
      * 请求定位
@@ -25,7 +24,7 @@ public class FingerprintRequest implements BaseRequest {
     public void requestLocation(List<BeaconRssi> RSSIs) {
         DataRepository.getInstance().location(locationPoint::postValue, RSSIs);
     }
-    public MutableLiveData<BeaconPoint> getLocationPoint() {
+    public UnPeekLiveData<BeaconPoint> getLocationPoint() {
         return locationPoint;
     }
 

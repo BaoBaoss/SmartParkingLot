@@ -16,12 +16,14 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.cetuer.smartparkinglot.App;
 import com.cetuer.smartparkinglot.BR;
 import com.cetuer.smartparkinglot.R;
+import com.cetuer.smartparkinglot.data.bean.Car;
 import com.cetuer.smartparkinglot.data.bean.Member;
 import com.cetuer.smartparkinglot.databinding.FragmentMineBinding;
 import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
+import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.SPUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 
@@ -36,6 +38,8 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
     private SharedViewModel mEvent;
     //新密码
     private String newPassword;
+    //修改车辆信息对话框
+    private MaterialDialog editCarDialog;
 
     @Override
     protected void initViewModel() {
@@ -52,9 +56,9 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //请求用户信息
-        mEvent.memberRequest.requestMemberInfo();
+        mState.memberRequest.requestMemberInfo();
         //得到用户信息后渲染界面
-        mEvent.memberRequest.getMemberInfo().observe(getViewLifecycleOwner(), member -> {
+        mState.memberRequest.getMemberInfo().observe(getViewLifecycleOwner(), member -> {
             //模糊背景
             Glide.with(this.mActivity).load(TextUtils.isEmpty(member.getAvatar()) ? R.drawable.default_avatar : member.getAvatar())
                     .bitmapTransform(new BlurTransformation(this.mActivity, 25), new CenterCrop(this.mActivity))
@@ -83,6 +87,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
         mBinding.editInfo.setOnClickListener(v -> new MaterialDialog.Builder(MineFragment.this.mActivity)
                 .title("修改个人信息")
                 .customView(R.layout.layout_edit_info, true)
+                .cancelable(false)
                 .positiveText("确定")
                 .onPositive((dialog, which) -> {
                     TextView nicknameText = dialog.getCustomView().findViewById(R.id.nickname);
@@ -90,7 +95,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                     RadioGroup genderGroup = dialog.getCustomView().findViewById(R.id.gender_group);
                     String pattern = "^(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57]|19[89]|166)[0-9]{8}";
                     //非手机号
-                    if(!Pattern.compile(pattern).matcher(phoneText.getText()).matches()) {
+                    if (!Pattern.compile(pattern).matcher(phoneText.getText()).matches()) {
                         ToastUtils.showShortToast(MineFragment.this.mActivity, "请输入正确的手机号");
                         return;
                     }
@@ -102,13 +107,55 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                         gender = 2;
                     }
 
-                    mEvent.memberRequest.requestUpdateInfo(new Member(nicknameText.getText().toString(), phoneText.getText().toString(), gender));
+                    mState.memberRequest.requestUpdateInfo(new Member(nicknameText.getText().toString(), phoneText.getText().toString(), gender));
                 })
                 .negativeText("取消").show());
-        mEvent.memberRequest.getUserInfo().observe(getViewLifecycleOwner(), unused -> {
+        mState.memberRequest.getUserInfo().observe(getViewLifecycleOwner(), unused -> {
             ToastUtils.showShortToast(MineFragment.this.mActivity, "修改个人信息成功");
-            mEvent.memberRequest.requestMemberInfo();
+            mState.memberRequest.requestMemberInfo();
         });
+        //车辆信息
+        mBinding.carInfo.setOnClickListener(v -> {
+            editCarDialog = new MaterialDialog.Builder(MineFragment.this.mActivity)
+                    .title("查看/修改车辆信息")
+                    .customView(R.layout.layout_edit_car_info, true)
+                    .cancelable(false)
+                    .positiveText("确定")
+                    .onPositive((dialog, which) -> {
+                        EditText carIdEdit = dialog.getCustomView().findViewById(R.id.carId);
+                        EditText brandEdit = dialog.getCustomView().findViewById(R.id.brand);
+                        EditText priceEdit = dialog.getCustomView().findViewById(R.id.price);
+                        EditText colorEdit = dialog.getCustomView().findViewById(R.id.color);
+                        String carId = carIdEdit.getText().toString().trim();
+                        String brand = brandEdit.getText().toString().trim();
+                        String price = priceEdit.getText().toString().trim();
+                        String color = colorEdit.getText().toString().trim();
+                        if (carId.isEmpty()) {
+                            ToastUtils.showShortToast(this.mActivity, "车牌号不能为空");
+                            return;
+                        }
+                        mState.carRequest.requestAddOrEdit(new Car(carId, brand, price.isEmpty() ? null : Integer.parseInt(price), color));
+                    })
+                    .negativeText("取消").show();
+            mState.carRequest.requestInfo();
+        });
+        //获取到车辆信息，更新对话框内容
+        mState.carRequest.getCarInfo().observe(getViewLifecycleOwner(), car -> {
+            KLog.e("222", car);
+            if (car != null) {
+                View customView = editCarDialog.getCustomView();
+                EditText carId = customView.findViewById(R.id.carId);
+                EditText brand = customView.findViewById(R.id.brand);
+                EditText price = customView.findViewById(R.id.price);
+                EditText color = customView.findViewById(R.id.color);
+                carId.setText(car.getCarId());
+                brand.setText(car.getBrand());
+                price.setText(car.getPrice() == null ? "" : car.getPrice().toString());
+                color.setText(car.getColor());
+            }
+        });
+        //修改成功
+        mState.carRequest.getAddOrEdit().observe(getViewLifecycleOwner(), unused -> ToastUtils.showShortToast(this.mActivity, "添加或修改车辆成功"));
         //停车记录
         mBinding.carHistory.setOnClickListener(v -> DialogUtils.showBasicDialogNoCancel(MineFragment.this.mActivity, "提示", "开发中，敬请期待~~~").show());
         //客服中心
@@ -118,9 +165,9 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
         //设置
         mBinding.setting.setOnClickListener(v -> DialogUtils.showBasicDialogNoCancel(MineFragment.this.mActivity, "提示", "开发中，敬请期待~~~").show());
         //退出登录
-        mBinding.logout.setOnClickListener(v -> mEvent.memberRequest.requestLogout());
+        mBinding.logout.setOnClickListener(v -> mState.memberRequest.requestLogout());
         //退出成功
-        mEvent.memberRequest.getLogout().observe(getViewLifecycleOwner(), unused -> {
+        mState.memberRequest.getLogout().observe(getViewLifecycleOwner(), unused -> {
             SPUtils.getInstance().remove("token");
             ToastUtils.showShortToast(MineFragment.this.mActivity, "退出成功");
         });
@@ -141,19 +188,19 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                     }
                     newPassword = newPwd;
                     //检查旧密码是否正确
-                    mEvent.memberRequest.requestMatchPwd(oldPwd);
+                    mState.memberRequest.requestMatchPwd(oldPwd);
                 })
                 .negativeText("取消").show());
         //旧密码匹配
-        mEvent.memberRequest.getIsMatchPwd().observe(getViewLifecycleOwner(), isCorrect -> {
+        mState.memberRequest.getIsMatchPwd().observe(getViewLifecycleOwner(), isCorrect -> {
             if (isCorrect) {
                 //正确则请求重置密码
-                mEvent.memberRequest.requestResetPwd(newPassword);
+                mState.memberRequest.requestResetPwd(newPassword);
                 return;
             }
             ToastUtils.showShortToast(MineFragment.this.mActivity, "修改失败，密码错误！");
         });
         //重置密码成功
-        mEvent.memberRequest.getResetPwd().observe(getViewLifecycleOwner(), unused -> ToastUtils.showShortToast(MineFragment.this.mActivity, "修改密码成功"));
+        mState.memberRequest.getResetPwd().observe(getViewLifecycleOwner(), unused -> ToastUtils.showShortToast(MineFragment.this.mActivity, "修改密码成功"));
     }
 }

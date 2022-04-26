@@ -55,8 +55,8 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
     private Integer lastLocationColor;
     //导航状态：0->未开始导航,1->导航中,2->导航结束
     private Integer navState = 0;
-    //导航停车位的坐标
-    private BeaconPoint spacePoint;
+    //导航的停车位
+    private ParkingSpace parkingSpace;
 
     @Override
     protected void initViewModel() {
@@ -73,37 +73,41 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEvent.parkingLotRequest.requestParkingIdByLatLng(getArguments().getDouble("longitude"), getArguments().getDouble("latitude"));
-        mEvent.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingLotId -> {
+        mState.parkingLotRequest.requestParkingIdByLatLng(getArguments().getDouble("longitude"), getArguments().getDouble("latitude"));
+        mState.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingLotId -> {
             this.parkingId = parkingLotId;
             //获得停车场的终点坐标
-            mEvent.beaconRequest.requestEndPoint(parkingLotId);
+            mState.beaconRequest.requestEndPoint(parkingLotId);
         });
         //获得终点坐标后获得停车位
-        mEvent.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
+        mState.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
             if(beaconPoint.getX() == 0 || beaconPoint.getY() == 0) {
                 ToastUtils.showShortToast(this.mActivity, "此停车场没有信标");
                 return;
             }
             endPoint = beaconPoint;
-            mEvent.parkingSpaceRequest.requestParkingSpace(parkingId);
+            mState.parkingSpaceRequest.requestParkingSpace(parkingId);
         });
         //获得停车位后绘制地图
-        mEvent.parkingSpaceRequest.getParkingSpaceList().observe(getViewLifecycleOwner(), parkingSpaces -> {
+        mState.parkingSpaceRequest.getParkingSpaceList().observe(getViewLifecycleOwner(), parkingSpaces -> {
             ParkingLotNavFragment.this.parkingSpaces = parkingSpaces;
             drawMap();
         });
         //定位
         mEvent.list.observe(getViewLifecycleOwner(), bleDevices -> {
+            //导航完成不再定位
+            if(navState == 3) {
+                return;
+            }
             if (scanCount < 10) {
                 scanCount++;
                 return;
             }
             scanCount = 0;
             List<BeaconRssi> RSSIs = bleDevices.stream().map(ble -> new BeaconRssi(ble.getDevice().getAddress(), ble.getRssi().doubleValue())).collect(Collectors.toList());
-            mEvent.fingerprintRequest.requestLocation(RSSIs);
+            mState.fingerprintRequest.requestLocation(RSSIs);
         });
-        mEvent.fingerprintRequest.getLocationPoint().observe(getViewLifecycleOwner(), point -> {
+        mState.fingerprintRequest.getLocationPoint().observe(getViewLifecycleOwner(), point -> {
             //上一个位置还原颜色，当前位置变色
             if (lastLocationPoint != null) {
                 coordinate.get(lastLocationPoint.getX()).get(lastLocationPoint.getY()).setBackgroundColor(lastLocationColor);
@@ -112,35 +116,16 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
             lastLocationColor = ((ColorDrawable) coordinate.get(point.getX()).get(point.getY()).getBackground()).getColor();
             coordinate.get(point.getX()).get(point.getY()).setBackgroundColor(Color.BLUE);
             //如果正在导航，并且当前位置与选中的车位坐标一致则停车成功
-            if(this.navState == 1 && point.getX().equals(spacePoint.getX()) && point.getY().equals(spacePoint.getY())) {
+            if(this.navState == 1 && point.getX().equals(parkingSpace.getX()) && point.getY().equals(parkingSpace.getY())) {
                 //发送请求
-                // TODO(保存当前车位信息（车辆编号和车位置为不可用）)
+                mState.parkingSpaceRequest.requestParking(parkingSpace.getId());
                 //改变当前车位颜色
                 coordinate.get(point.getX()).get(point.getY()).setBackgroundColor(Color.RED);
                 //更改导航状态为已完成
                 this.navState = 2;
             }
         });
-    }
-
-    @Override
-    public void onDestroyView() {
-        mOpenBluetooth = false;
-        mOpenGps = false;
-        parkingId = null;
-        endPoint = null;
-        parkingSpaces = null;
-        coordinate = null;
-        lastLocationPoint = null;
-        lastLocationColor = null;
-        spacePoint = null;
-        navState = 0;
-        mEvent.parkingLotRequest.getParkingLotId().removeObservers(getViewLifecycleOwner());
-        mEvent.beaconRequest.getEndPoint().removeObservers(getViewLifecycleOwner());
-        mEvent.parkingSpaceRequest.getParkingSpaceList().removeObservers(getViewLifecycleOwner());
-        mEvent.list.removeObservers(getViewLifecycleOwner());
-        mEvent.fingerprintRequest.getLocationPoint().removeObservers(getViewLifecycleOwner());
-        super.onDestroyView();
+        mState.parkingSpaceRequest.getParking().observe(getViewLifecycleOwner(), unused -> DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "停车成功！"));
     }
 
     /**
@@ -207,7 +192,7 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
                     //不是还未开始导航则不进行导航
                     if(navState != 0) return;
                     DialogUtils.showBasicDialog(ParkingLotNavFragment.this.mActivity, "提示", "您确定要选定此车位作为停车位吗？")
-                            .onPositive((dialog, which) -> navigation(new BeaconPoint(space.getX(), space.getY())))
+                            .onPositive((dialog, which) -> navigation(space))
                             .onNegative((dialog, which) -> dialog.dismiss())
                             .show();
                 });
@@ -227,10 +212,10 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
 
     /**
      * 根据车位坐标导航
-     * @param spacePoint 车位坐标
+     * @param parkingSpace 导航车位
      */
-    public void navigation(BeaconPoint spacePoint) {
-        this.spacePoint = spacePoint;
+    public void navigation(ParkingSpace parkingSpace) {
+        this.parkingSpace = parkingSpace;
         this.navState = 1;
     }
 
@@ -244,7 +229,7 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
                 && mOpenGps
                 && PermissionX.isGranted(this.mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
                 && PermissionX.isGranted(this.mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            mEvent.beaconRequest.requestBeaconList(parkingLotId);
+            mState.beaconRequest.requestBeaconList(parkingLotId);
         }
     }
 }
