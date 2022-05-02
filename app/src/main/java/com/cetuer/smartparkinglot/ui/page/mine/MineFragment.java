@@ -23,7 +23,6 @@ import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
-import com.cetuer.smartparkinglot.utils.KLog;
 import com.cetuer.smartparkinglot.utils.SPUtils;
 import com.cetuer.smartparkinglot.utils.ToastUtils;
 
@@ -141,7 +140,6 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
         });
         //获取到车辆信息，更新对话框内容
         mState.carRequest.getCarInfo().observe(getViewLifecycleOwner(), car -> {
-            KLog.e("222", car);
             if (car != null) {
                 View customView = editCarDialog.getCustomView();
                 EditText carId = customView.findViewById(R.id.carId);

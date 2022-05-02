@@ -13,17 +13,22 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/explain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="绿色代表可以停车，红色代表无法停车，蓝色代表当前位置，点击绿色车位即可确定停车位置"
-            android:textColor="#f00"/>
+            android:textColor="#f00" />
+
         <ScrollView
-            android:layout_below="@id/explain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="1dp">
+            android:layout_below="@id/explain"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"

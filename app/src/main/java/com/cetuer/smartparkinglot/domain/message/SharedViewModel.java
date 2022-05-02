@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cetuer.smartparkinglot.bluetooth.BleDevice;
+import com.cetuer.smartparkinglot.data.request.BeaconRequest;
 
 import java.util.List;
 
@@ -12,6 +13,10 @@ import java.util.List;
  * 跨页面共享ViewModel
  */
 public class SharedViewModel extends ViewModel {
+    /**
+     * 信标请求
+     */
+    public final BeaconRequest beaconRequest = new BeaconRequest();
     /**
      * 是否打开蓝牙
      */

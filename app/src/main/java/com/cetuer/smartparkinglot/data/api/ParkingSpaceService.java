@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Cetuer on 2022/3/26 23:51.
@@ -28,5 +29,18 @@ public interface ParkingSpaceService {
      * @return 无
      */
     @GET("parking-app/parkingSpace/parking")
-    Call<ResultData<Void>> parking(Integer spaceId);
+    Call<ResultData<Void>> parking(@Query("spaceId") Integer spaceId);
+
+    /**
+     * 获取停车车位
+     * @return 停车车位，如果没有则为null
+     */
+    @GET("parking-app/parkingSpace/carSpace")
+    Call<ResultData<ParkingSpace>> carSpace();
+
+    /**
+     * 寻车
+     */
+    @GET("parking-app/parkingSpace/findCar")
+    Call<ResultData<Void>> findCar(@Query("spaceId") Integer spaceId);
 }

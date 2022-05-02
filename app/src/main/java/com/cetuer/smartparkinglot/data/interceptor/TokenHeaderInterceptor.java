@@ -11,7 +11,7 @@ import okhttp3.Response;
 
 /**
  * Created by Cetuer on 2022/4/5 14:27.
- * Token拦截器
+ * Token拦截器 携带token
  */
 public class TokenHeaderInterceptor implements Interceptor {
     @NonNull

@@ -57,8 +57,8 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
         //登录中则不可点击登录按钮
         mEvent.beLogin.observe(this, beLogin -> mBinding.login.setEnabled(!beLogin));
         //登录完成，将token保存到SharedPreferences后跳转到主界面
-        mState.memberRequest.getToken().observe(this, s -> {
-            SPUtils.getInstance().put("token", s);
+        mState.memberRequest.getToken().observe(this, token -> {
+            SPUtils.getInstance().put("token", token);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

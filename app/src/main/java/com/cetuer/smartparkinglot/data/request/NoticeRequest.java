@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Created by Cetuer on 2022/3/26 23:53.
- * 停车场请求
+ * 公告请求
  */
 public class NoticeRequest implements BaseRequest {
     private final UnPeekLiveData<List<Notice>> noticeList = new UnPeekLiveData<>();

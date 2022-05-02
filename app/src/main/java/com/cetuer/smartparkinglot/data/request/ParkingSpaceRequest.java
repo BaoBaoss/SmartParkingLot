@@ -14,6 +14,8 @@ public class ParkingSpaceRequest implements BaseRequest {
 
     private final UnPeekLiveData<List<ParkingSpace>> parkingSpaceList = new UnPeekLiveData<>();
     private final UnPeekLiveData<Void> parking = new UnPeekLiveData<>();
+    private final UnPeekLiveData<Void> findCar = new UnPeekLiveData<>();
+    private final UnPeekLiveData<ParkingSpace> carSpace = new UnPeekLiveData<>();
 
 
     /**
@@ -30,11 +32,34 @@ public class ParkingSpaceRequest implements BaseRequest {
         DataRepository.getInstance().parking(parking::postValue, spaceId);
     }
 
+    /**
+     * 请求停车车位
+     */
+    public void requestCarSpace() {
+        DataRepository.getInstance().carSpace(carSpace::postValue);
+    }
+
+    /**
+     * 请求寻车
+     * @param spaceId 之前车位id
+     */
+    public void requestFindCar(Integer spaceId) {
+        DataRepository.getInstance().findCar(findCar::postValue, spaceId);
+    }
+
     public UnPeekLiveData<List<ParkingSpace>> getParkingSpaceList() {
         return parkingSpaceList;
     }
 
     public UnPeekLiveData<Void> getParking() {
         return parking;
+    }
+
+    public UnPeekLiveData<ParkingSpace> getCarSpace() {
+        return carSpace;
+    }
+
+    public UnPeekLiveData<Void> getFindCar() {
+        return findCar;
     }
 }

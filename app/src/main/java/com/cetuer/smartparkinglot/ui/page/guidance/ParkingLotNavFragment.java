@@ -77,10 +77,10 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
         mState.parkingLotRequest.getParkingLotId().observe(getViewLifecycleOwner(), parkingLotId -> {
             this.parkingId = parkingLotId;
             //获得停车场的终点坐标
-            mState.beaconRequest.requestEndPoint(parkingLotId);
+            mEvent.beaconRequest.requestEndPoint(parkingLotId);
         });
         //获得终点坐标后获得停车位
-        mState.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
+        mEvent.beaconRequest.getEndPoint().observe(getViewLifecycleOwner(), beaconPoint -> {
             if(beaconPoint.getX() == 0 || beaconPoint.getY() == 0) {
                 ToastUtils.showShortToast(this.mActivity, "此停车场没有信标");
                 return;
@@ -96,7 +96,7 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
         //定位
         mEvent.list.observe(getViewLifecycleOwner(), bleDevices -> {
             //导航完成不再定位
-            if(navState == 3) {
+            if(navState == 2) {
                 return;
             }
             if (scanCount < 10) {
@@ -141,14 +141,14 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
             topLinearLayout.addView(topLine);
         }
         mBinding.map.addView(topLinearLayout);
-        //y行
+        //x行
         for (int i = 0; i < endPoint.getX(); i++) {
             LinearLayout linearLayout = new LinearLayout(this.mActivity);
             //保存本行坐标
             ArrayList<TextView> points = new ArrayList<>();
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setGravity(Gravity.CENTER);
-            //x列
+            //y列
             for (int j = 0; j < endPoint.getY(); j++) {
                 if (j == 0) {
                     //左侧边框
@@ -216,7 +216,10 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
      */
     public void navigation(ParkingSpace parkingSpace) {
         this.parkingSpace = parkingSpace;
-        this.navState = 1;
+        this.mState.parkingSpaceRequest.requestParking(parkingSpace.getId());
+        mState.parkingSpaceRequest.getParking().observe(getViewLifecycleOwner(), unused -> DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "停车成功！"));
+        //TODO(为了开发方便，点击即可停车成功)
+        this.navState = 2;
     }
 
     /**
@@ -229,7 +232,7 @@ public class ParkingLotNavFragment extends BaseFragment<FragmentParkingLotNavBin
                 && mOpenGps
                 && PermissionX.isGranted(this.mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
                 && PermissionX.isGranted(this.mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            mState.beaconRequest.requestBeaconList(parkingLotId);
+            mEvent.beaconRequest.requestBeaconList(parkingLotId);
         }
     }
 }

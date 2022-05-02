@@ -372,6 +372,21 @@ public class DataRepository {
     }
 
     /**
+     * 获取停车车位
+     *
+     * @param result 回调
+     */
+    public void carSpace(ResultData.Result<ParkingSpace> result) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(ParkingSpaceService.class).carSpace().enqueue(new BaseCallBack<ParkingSpace>() {
+            @Override
+            public void onSuccessful(ParkingSpace data) {
+                result.onResult(data);
+            }
+        });
+    }
+
+    /**
      * 是否可以寻车
      *
      * @param result 回调
@@ -381,6 +396,21 @@ public class DataRepository {
         retrofit.create(CarService.class).canFindCar().enqueue(new BaseCallBack<Boolean>() {
             @Override
             public void onSuccessful(Boolean data) {
+                result.onResult(data);
+            }
+        });
+    }
+    /**
+     * 寻车
+     *
+     * @param spaceId 之前停车位置
+     * @param result 回调
+     */
+    public void findCar(ResultData.Result<Void> result, Integer spaceId) {
+        DialogUtils.showLoadingDialog();
+        retrofit.create(ParkingSpaceService.class).findCar(spaceId).enqueue(new BaseCallBack<Void>() {
+            @Override
+            public void onSuccessful(Void data) {
                 result.onResult(data);
             }
         });
