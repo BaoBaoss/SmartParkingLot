@@ -17,11 +17,16 @@
             android:layout_height="wrap_content"
             android:text="紫色代表车辆位置，蓝色代表当前位置"
             android:textColor="#f00" />
-
+        <Button
+            android:id="@+id/restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始寻车"
+            android:layout_below="@id/explain"/>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/explain"
+            android:layout_below="@id/restart"
             android:layout_marginStart="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="1dp"

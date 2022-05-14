@@ -1,5 +1,7 @@
 package com.cetuer.smartparkinglot.data.request;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.cetuer.smartparkinglot.data.bean.ParkingSpace;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
 import com.kunminx.architecture.ui.callback.UnPeekLiveData;
@@ -13,8 +15,8 @@ import java.util.List;
 public class ParkingSpaceRequest implements BaseRequest {
 
     private final UnPeekLiveData<List<ParkingSpace>> parkingSpaceList = new UnPeekLiveData<>();
-    private final UnPeekLiveData<Void> parking = new UnPeekLiveData<>();
-    private final UnPeekLiveData<Void> findCar = new UnPeekLiveData<>();
+    private final MutableLiveData<Void> parking = new MutableLiveData<>();
+    private final MutableLiveData<Void> findCar = new MutableLiveData<>();
     private final UnPeekLiveData<ParkingSpace> carSpace = new UnPeekLiveData<>();
 
 
@@ -51,7 +53,7 @@ public class ParkingSpaceRequest implements BaseRequest {
         return parkingSpaceList;
     }
 
-    public UnPeekLiveData<Void> getParking() {
+    public MutableLiveData<Void> getParking() {
         return parking;
     }
 
@@ -59,7 +61,7 @@ public class ParkingSpaceRequest implements BaseRequest {
         return carSpace;
     }
 
-    public UnPeekLiveData<Void> getFindCar() {
+    public MutableLiveData<Void> getFindCar() {
         return findCar;
     }
 }

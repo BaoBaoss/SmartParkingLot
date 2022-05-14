@@ -1,5 +1,7 @@
 package com.cetuer.smartparkinglot.data.request;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.cetuer.smartparkinglot.data.bean.Member;
 import com.cetuer.smartparkinglot.data.bean.MemberLogin;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
@@ -14,7 +16,7 @@ public class MemberRequest implements BaseRequest {
     /**
      * 注册结果
      */
-    private final UnPeekLiveData<Void> registerRes = new UnPeekLiveData<>();
+    private final MutableLiveData<Void> registerRes = new MutableLiveData<>();
 
     /**
      * token
@@ -29,7 +31,7 @@ public class MemberRequest implements BaseRequest {
     /**
      * 修改密码结果
      */
-    private final UnPeekLiveData<Void> resetPwd = new UnPeekLiveData<>();
+    private final MutableLiveData<Void> resetPwd = new MutableLiveData<>();
 
     /**
      * 密码是否匹配
@@ -39,12 +41,12 @@ public class MemberRequest implements BaseRequest {
     /**
      * 修改个人信息结果
      */
-    private final UnPeekLiveData<Void> userInfo = new UnPeekLiveData<>();
+    private final MutableLiveData<Void> userInfo = new MutableLiveData<>();
 
     /**
      * 登出
      */
-    private final UnPeekLiveData<Void> logout = new UnPeekLiveData<>();
+    private final MutableLiveData<Void> logout = new MutableLiveData<>();
 
     /**
      * 请求注册
@@ -96,7 +98,7 @@ public class MemberRequest implements BaseRequest {
         DataRepository.getInstance().updateMember(userInfo::postValue, member);
     }
 
-    public UnPeekLiveData<Void> getRegisterRes() {
+    public MutableLiveData<Void> getRegisterRes() {
         return registerRes;
     }
 
@@ -108,7 +110,7 @@ public class MemberRequest implements BaseRequest {
         return memberInfo;
     }
 
-    public UnPeekLiveData<Void> getResetPwd() {
+    public MutableLiveData<Void> getResetPwd() {
         return resetPwd;
     }
 
@@ -116,11 +118,11 @@ public class MemberRequest implements BaseRequest {
         return isMatchPwd;
     }
 
-    public UnPeekLiveData<Void> getLogout() {
+    public MutableLiveData<Void> getLogout() {
         return logout;
     }
 
-    public UnPeekLiveData<Void> getUserInfo() {
+    public MutableLiveData<Void> getUserInfo() {
         return userInfo;
     }
 }

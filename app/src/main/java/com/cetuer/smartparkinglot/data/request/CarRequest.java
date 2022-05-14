@@ -1,5 +1,7 @@
 package com.cetuer.smartparkinglot.data.request;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.cetuer.smartparkinglot.data.bean.Car;
 import com.cetuer.smartparkinglot.data.repository.DataRepository;
 import com.kunminx.architecture.ui.callback.UnPeekLiveData;
@@ -9,7 +11,7 @@ import com.kunminx.architecture.ui.callback.UnPeekLiveData;
  * 车辆信息请求
  */
 public class CarRequest implements BaseRequest {
-    private final UnPeekLiveData<Void> addOrEdit = new UnPeekLiveData<>();
+    private final MutableLiveData<Void> addOrEdit = new MutableLiveData<>();
     private final UnPeekLiveData<Car> carInfo = new UnPeekLiveData<>();
     private final UnPeekLiveData<Boolean> canParking = new UnPeekLiveData<>();
     private final UnPeekLiveData<Boolean> canFindCar = new UnPeekLiveData<>();
@@ -43,7 +45,7 @@ public class CarRequest implements BaseRequest {
     }
 
 
-    public UnPeekLiveData<Void> getAddOrEdit() {
+    public MutableLiveData<Void> getAddOrEdit() {
         return addOrEdit;
     }
 

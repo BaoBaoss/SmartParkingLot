@@ -164,16 +164,16 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             if (item.getItemId() == R.id.navigation_parking_guidance) {
-                mBinding.mainViewPager.setCurrentItem(0);
+                mBinding.mainViewPager.setCurrentItem(0, false);
                 return true;
             } else if (item.getItemId() == R.id.navigation_reverse_for_car) {
-                mBinding.mainViewPager.setCurrentItem(1);
+                mBinding.mainViewPager.setCurrentItem(1, false);
                 return true;
             } else if (item.getItemId() == R.id.navigation_carport_query) {
-                mBinding.mainViewPager.setCurrentItem(2);
+                mBinding.mainViewPager.setCurrentItem(2, false);
                 return true;
             } else if (item.getItemId() == R.id.navigation_mine) {
-                mBinding.mainViewPager.setCurrentItem(3);
+                mBinding.mainViewPager.setCurrentItem(3, false);
                 return true;
             } else
                 return false;

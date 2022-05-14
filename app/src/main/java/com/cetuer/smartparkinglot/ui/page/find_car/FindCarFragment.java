@@ -1,6 +1,5 @@
 package com.cetuer.smartparkinglot.ui.page.find_car;
 
-import android.Manifest;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import com.cetuer.smartparkinglot.domain.config.DataBindingConfig;
 import com.cetuer.smartparkinglot.domain.message.SharedViewModel;
 import com.cetuer.smartparkinglot.ui.page.BaseFragment;
 import com.cetuer.smartparkinglot.utils.DialogUtils;
-import com.permissionx.guolindev.PermissionX;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +63,14 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //是否可寻车
-        mState.carRequest.canFindCar();
+        //点击按钮开始寻车
+        mBinding.restart.setOnClickListener(v -> mState.carRequest.canFindCar());
         mState.carRequest.getCanFindCar().observe(this.mActivity, canFindCar -> {
             if (!canFindCar) {
                 DialogUtils.showBasicDialogNoCancel(this.mActivity, "提示", "无法寻车，没有车或者未停车").show();
+                return;
             }
+            mBinding.restart.setEnabled(false);
             //请求停车车位信息
             mState.spaceRequest.requestCarSpace();
         });
@@ -85,20 +85,7 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
             endPoint = beaconPoint;
             drawMap();
         });
-        //定位
-        mEvent.list.observe(getViewLifecycleOwner(), bleDevices -> {
-            //导航完成不再定位
-            if (navState == 2) {
-                return;
-            }
-            if (scanCount < 10) {
-                scanCount++;
-                return;
-            }
-            scanCount = 0;
-            List<BeaconRssi> RSSIs = bleDevices.stream().map(ble -> new BeaconRssi(ble.getDevice().getAddress(), ble.getRssi().doubleValue())).collect(Collectors.toList());
-            mState.fingerprintRequest.requestLocation(RSSIs);
-        });
+
         mState.fingerprintRequest.getLocationPoint().observe(getViewLifecycleOwner(), point -> {
             //上一个位置还原颜色，当前位置变色
             if (lastLocationPoint != null) {
@@ -170,27 +157,19 @@ public class FindCarFragment extends BaseFragment<FragmentFindCarBinding> {
         //给停车位置上色为紫色
         coordinate.get(parkingSpace.getX()).get(parkingSpace.getY()).setBackgroundColor(0XFFFF00FF);
         //定位
-        mEvent.openBluetooth.observe(getViewLifecycleOwner(), openBluetooth -> {
-            mOpenBluetooth = openBluetooth;
-            requestBeaconList(parkingSpace.getParkingLotId());
+        mEvent.list.observe(getViewLifecycleOwner(), bleDevices -> {
+            //导航完成不再定位
+            if (navState == 2) {
+                return;
+            }
+            if (scanCount < 10) {
+                scanCount++;
+                return;
+            }
+            scanCount = 0;
+            List<BeaconRssi> RSSIs = bleDevices.stream().map(ble -> new BeaconRssi(ble.getDevice().getAddress(), ble.getRssi().doubleValue())).collect(Collectors.toList());
+            mState.fingerprintRequest.requestLocation(RSSIs);
         });
-        mEvent.openGPS.observe(getViewLifecycleOwner(), openGps -> {
-            mOpenGps = openGps;
-            requestBeaconList(parkingSpace.getParkingLotId());
-        });
-    }
-
-    /**
-     * 获取此停车场蓝牙mac地址
-     *
-     * @param parkingLotId 停车场id
-     */
-    public void requestBeaconList(Integer parkingLotId) {
-        if (mOpenBluetooth
-                && mOpenGps
-                && PermissionX.isGranted(this.mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                && PermissionX.isGranted(this.mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            mEvent.beaconRequest.requestBeaconList(parkingLotId);
-        }
+        mEvent.beaconRequest.requestBeaconList(parkingSpace.getParkingLotId());
     }
 }
